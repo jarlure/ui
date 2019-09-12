@@ -1,0 +1,38 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group 'com.gitee.jarlure'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8 // java 8
+targetCompatibility = 1.8
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+repositories {
+    jcenter()
+}
+
+def jme3 = [v:'3.1.0-stable', g:'org.jmonkeyengine']
+dependencies {
+    compile "${jme3.g}:jme3-core:${jme3.v}"
+    runtime "${jme3.g}:jme3-lwjgl:${jme3.v}"
+    testCompile "${jme3.g}:jme3-desktop:${jme3.v}"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}

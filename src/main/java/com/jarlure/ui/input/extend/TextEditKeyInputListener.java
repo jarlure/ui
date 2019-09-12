@@ -1,0 +1,264 @@
+package com.jarlure.ui.input.extend;
+
+import com.jarlure.ui.component.UIComponent;
+import com.jarlure.ui.effect.TextEditEffect;
+import com.jarlure.ui.input.KeyEvent;
+import com.jarlure.ui.input.KeyInputListener;
+import com.jarlure.ui.property.FocusProperty;
+import com.jarlure.ui.property.TextProperty;
+import com.jarlure.ui.property.common.Property;
+import com.jarlure.ui.util.ClipboardEditor;
+import com.jme3.input.KeyInput;
+
+public abstract class TextEditKeyInputListener implements KeyInputListener {
+
+    private UIComponent text;
+
+    /**
+     * 单行文本编辑器的键盘输入监听器。目前该类有未处理的BUG：文本编辑输入监听器无法得知文本长度限制，因此鼠标位置索引可
+     *                                                        能会大于文本最大长度
+     *
+     * @param text 单行文本。该组件需要有TextEditEffect
+     */
+    public TextEditKeyInputListener(UIComponent text) {
+        this.text = text;
+    }
+
+    protected abstract Property<Integer> getCursorPositionIndex();
+
+    protected abstract Property<Integer> getSelectFromIndex();
+
+    protected FocusProperty getFocusProperty() {
+        return text.get(FocusProperty.class);
+    }
+
+    protected TextProperty getTextProperty() {
+        return text.get(TextProperty.class);
+    }
+
+    protected TextEditEffect getTextEditEffect() {
+        return text.get(TextEditEffect.class);
+    }
+
+    @Override
+    public void onKeyPressed(KeyEvent key) {
+        if (!getFocusProperty().isFocus()) return;
+        switch (key.getCode()) {
+            case KeyInput.KEY_LEFT:
+                if (key.isCtrlPressedOnly()) leftMoveSelect();
+                else leftMoveCursor();
+                return;
+            case KeyInput.KEY_RIGHT:
+                if (key.isCtrlPressedOnly()) rightMoveSelect();
+                else rightMoveCursor();
+                return;
+            case KeyInput.KEY_BACK:
+                deleteSelectOrCursorLeft();
+                return;
+            case KeyInput.KEY_DELETE:
+                deleteSelect();
+                return;
+            case KeyInput.KEY_RETURN:
+                if (getFocusProperty().isFocus()) {
+                    getTextEditEffect().finishImmediately();
+                    getFocusProperty().setFocus(false);
+                }
+                return;
+            case KeyInput.KEY_C:
+                if (key.isCtrlPressedOnly()) {
+                    copy();
+                    return;
+                }
+                break;
+            case KeyInput.KEY_V:
+                if (key.isCtrlPressedOnly()) {
+                    paste();
+                    return;
+                }
+                break;
+        }
+        if (key.getValue() == 0) return;
+        insert(key.getValue());
+    }
+
+    @Override
+    public void onKeyPressing(KeyEvent key) {
+        onKeyPressed(key);
+    }
+
+    @Override
+    public void onKeyReleased(KeyEvent key) {
+        if (!getFocusProperty().isFocus()) return;
+        //输入法输入值
+        if (key.getCode() == 0 && key.getValue() != 0) {
+            insert(key.getValue());
+        }
+    }
+
+    /**
+     * 光标左移并选中。你可以在Windows操作系统自带的文本编辑器中按下按键Ctrl+←重现这种操作
+     */
+    protected void leftMoveSelect() {
+        int index = getCursorPositionIndex().getValue() - 1;
+        if (index < 0) return;
+        getCursorPositionIndex().setValue(index);
+        int fromIndex = getSelectFromIndex().getValue();
+        getTextEditEffect().select(0, fromIndex, 0, index);
+    }
+
+    /**
+     * 光标左移。你可以在Windows操作系统自带的文本编辑器中按下按键←重现这种操作
+     */
+    protected void leftMoveCursor() {
+        int index = getCursorPositionIndex().getValue() - 1;
+        if (index < 0) return;
+        getCursorPositionIndex().setValue(index);
+        getTextEditEffect().setCursorPosition(0, index);
+        getSelectFromIndex().setValue(index);
+    }
+
+    /**
+     * 光标右移并选中。你可以在Windows操作系统自带的文本编辑器中按下按键Ctrl+→重现这种操作
+     */
+    protected void rightMoveSelect() {
+        int index = getCursorPositionIndex().getValue() + 1;
+        if (index > getTextProperty().getText().length()) return;
+        getCursorPositionIndex().setValue(index);
+        int fromIndex = getSelectFromIndex().getValue();
+        getTextEditEffect().select(0, fromIndex, 0, index);
+    }
+
+    /**
+     * 光标右移。你可以在Windows操作系统自带的文本编辑器中按下按键→重现这种操作
+     */
+    protected void rightMoveCursor() {
+        int index = getCursorPositionIndex().getValue() + 1;
+        if (index > getTextProperty().getText().length()) return;
+        getCursorPositionIndex().setValue(index);
+        getTextEditEffect().setCursorPosition(0, index);
+        getSelectFromIndex().setValue(index);
+    }
+
+    /**
+     * 删除选中的文本内容或删除光标左边一个字符。你可以在Windows操作系统自带的文本编辑器中按下Back键（它在回车键的上方，
+     * 一般画着←符号）重现这种操作
+     */
+    protected void deleteSelectOrCursorLeft() {
+        int fromIndex = getSelectFromIndex().getValue();
+        int toIndex = getCursorPositionIndex().getValue();
+        if (fromIndex == toIndex) {
+            deleteCursorLeft();
+        } else {
+            deleteSelect();
+        }
+    }
+
+    /**
+     * 删除鼠标左边一个字符。你可以在Windows操作系统自带的文本编辑器中按下Back键（它在回车键的上方，一般画着←符号）重现
+     * 这种操作
+     */
+    protected void deleteCursorLeft() {
+        int index = getCursorPositionIndex().getValue();
+        if (index <= 0) return;
+        index--;
+        getCursorPositionIndex().setValue(index);
+        getSelectFromIndex().setValue(index);
+        String text = getTextProperty().getText();
+        StringBuilder builder = new StringBuilder(text);
+        builder.delete(index, index + 1);
+        getTextProperty().setText(builder.toString());
+        getTextEditEffect().setCursorPosition(0, index);
+    }
+
+    /**
+     * 删除选中的文本内容。你可以在Windows操作系统自带的文本编辑器中选中部分文本内容后，按下Back键（它在回车键的上方，
+     * 一般画着←符号）重现这种操作
+     */
+    protected void deleteSelect() {
+        int fromIndex = getSelectFromIndex().getValue();
+        int toIndex = getCursorPositionIndex().getValue();
+        if (fromIndex == toIndex) return;
+        int minIndex = Math.min(fromIndex, toIndex);
+        int maxIndex = Math.max(fromIndex, toIndex);
+        String text = getTextProperty().getText();
+        StringBuilder builder = new StringBuilder(text);
+        builder.delete(minIndex, maxIndex + 1);
+        getTextProperty().setText(builder.toString());
+        builder.reverse();
+        getSelectFromIndex().setValue(minIndex);
+        getCursorPositionIndex().setValue(minIndex);
+        getTextEditEffect().setCursorPosition(0, minIndex);
+    }
+
+    /**
+     * 插入一个字符。
+     * @param c 字符
+     */
+    protected void insert(char c) {
+        TextProperty textProperty = getTextProperty();
+        String text = textProperty.getText();
+        StringBuilder builder = new StringBuilder(text);
+        int fromIndex = getSelectFromIndex().getValue();
+        int index = getCursorPositionIndex().getValue();
+        if (fromIndex != index) {
+            int minIndex = Math.min(fromIndex, index);
+            int maxIndex = Math.max(fromIndex, index);
+            builder.delete(minIndex, maxIndex);
+            builder.insert(minIndex, c);
+            index = minIndex;
+        } else {
+            builder.insert(index, c);
+        }
+        textProperty.setText(builder.toString());
+        index++;
+        getCursorPositionIndex().setValue(index);
+        getTextEditEffect().setCursorPosition(0, index);
+        getSelectFromIndex().setValue(index);
+    }
+
+    /**
+     * 复制选中的文本内容到系统剪贴板。你可以在Windows操作系统自带的文本编辑器中选中部分文本内容后，按下Ctrl+C重现这种操
+     * 作
+     */
+    protected void copy() {
+        int fromIndex = getSelectFromIndex().getValue();
+        int toIndex = getCursorPositionIndex().getValue();
+        if (fromIndex == toIndex) return;
+        if (fromIndex < 0) return;
+        if (toIndex < 0) return;
+        String text = getTextProperty().getText();
+        if (text == null) return;
+        int minIndex = Math.min(fromIndex, toIndex);
+        int maxIndex = Math.max(fromIndex, toIndex);
+        text = text.substring(minIndex, maxIndex);
+        ClipboardEditor.setTextToClipboard(text);
+    }
+
+    /**
+     * 从系统剪贴板获得文本内容并粘贴到光标所在位置。你可以在Windows操作系统自带的文本编辑器中，按下Ctrl+V重现这种操作
+     */
+    protected void paste() {
+        String textFromClipboard = ClipboardEditor.getTextFromClipboard();
+        if (textFromClipboard == null || textFromClipboard.isEmpty()) return;
+        TextProperty textProperty = getTextProperty();
+        String text = textProperty.getText();
+        StringBuilder builder = new StringBuilder(text);
+        int fromIndex = getSelectFromIndex().getValue();
+        int index = getCursorPositionIndex().getValue();
+        if (fromIndex != index) {
+            int minIndex = Math.min(fromIndex, index);
+            int maxIndex = Math.max(fromIndex, index);
+            builder.delete(minIndex, maxIndex);
+            builder.insert(minIndex, textFromClipboard);
+            index = minIndex;
+        } else {
+            builder.insert(index, textFromClipboard);
+        }
+        textProperty.setText(builder.toString());
+        index += textFromClipboard.length();
+        getCursorPositionIndex().setValue(index);
+        getTextEditEffect().setCursorPosition(0, index);
+        getSelectFromIndex().setValue(index);
+    }
+
+}
