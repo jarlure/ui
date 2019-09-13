@@ -93,6 +93,7 @@ public class ListProperty<T> {
      * 在属性值列表中插入几个元素
      * @param index 参数数组中第一个元素插入后的索引值
      * @param values 插入的几个元素
+     * @return true
      */
     public boolean add(int index,T... values){
         int size = size();
@@ -145,7 +146,7 @@ public class ListProperty<T> {
 
     /**
      * 从属性值列表中移除几个元素
-     * @param values
+     * @param values    要移除的元素
      */
     public void remove(T... values){
         int[] index = new int[values.length];

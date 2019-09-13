@@ -25,7 +25,7 @@ public class SpatialProperty extends EnumProperty implements WithUIComponent {
 
     /**
      * 组件的Spatial属性
-     * @param spatial
+     * @param spatial   spatial参数
      */
     public SpatialProperty(Spatial spatial) {
         this.spatial=spatial;

@@ -57,7 +57,6 @@ public class Font {
      * 设置字体样式。在PC上这里的字体样式将会设置进java.awt.Font中。
      *
      * @param style 字体样式。
-     * @return this
      */
     public void setStyle(int style) {
         this.style = style;

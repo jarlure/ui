@@ -10,7 +10,7 @@ public class PercentProperty extends Property<Float> {
 
     /**
      * 组件的百分比属性
-     * @param value
+     * @param value 百分比参数
      */
     public PercentProperty(float value){
         super(value);

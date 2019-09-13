@@ -10,7 +10,7 @@ public class FocusProperty extends Property<Boolean> {
 
     /**
      * 组件的焦点属性
-     * @param focus
+     * @param focus 焦点
      */
     public FocusProperty(boolean focus){
         setFocus(focus);

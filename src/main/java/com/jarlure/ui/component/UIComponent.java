@@ -55,7 +55,7 @@ public interface UIComponent {
 
     /**
      * 设置当前组件是否可见。可以通过设置false隐藏该组件
-     * @param visible
+     * @param visible   是否可见
      */
     void setVisible(boolean visible);
 
@@ -68,15 +68,15 @@ public interface UIComponent {
     /**
      * 获取当前组件的某个参数。该方法一般用于获取当前组件的成员变量
      * @param param 参数名
-     * @return
+     * @return  当前组件的某个参数
      */
     Object get(String param);
 
     /**
      * 判断当前组件是否有某个类型的数据
-     * @param type
-     * @param <T>
-     * @return
+     * @param type  类型
+     * @param <T>   类型
+     * @return  该类型的实例
      */
     <T> boolean exist(Class<T> type);
 
@@ -84,7 +84,7 @@ public interface UIComponent {
      * 获取与当前组件相关联的某个数据。如果当前组件没有该类型的数据，则会自动创建一个该类型的实例。
      * 如果该类型无法通过反射机制动态创建，则会返回null
      * @param type  该数据的类型
-     * @param <T>
+     * @param <T>   类型
      * @return  与当前组件相关联的类型为type的数据
      */
     <T> T get(Class<T> type);
@@ -93,8 +93,8 @@ public interface UIComponent {
      * 给当前组件设置关联数据。如果当前组件已存在该类型的数据，则会用新数据替换掉旧数据。
      * @param type  该数据的类型
      * @param value 要关联的数据。这个数据的类型必须是type的子类
-     * @param <K>
-     * @param <V>
+     * @param <K>   键
+     * @param <V>   值
      */
     <K,V extends K>void set(Class<K> type,V value);
 

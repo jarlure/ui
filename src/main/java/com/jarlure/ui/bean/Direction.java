@@ -88,16 +88,16 @@ public enum Direction {
     }
 
     /**
-     * 获得该方向的索引值。NULL方向为0，其余方向对应数字键盘上的1-9。例如：右方对应6；左下方对应1；中心对应5
+     * 获取该方向的索引值。NULL方向为0，其余方向对应数字键盘上的1-9。例如：右方对应6；左下方对应1；中心对应5
      *
-     * @return
+     * @return  该方向的索引值
      */
     public int getIndex() {
         return index;
     }
 
     /**
-     * 获得该方向的x坐标。以CENTER方向的坐标为原点，在CENTER左边的记为-1，右边的记为1，其余记为0
+     * 获取该方向的x坐标。以CENTER方向的坐标为原点，在CENTER左边的记为-1，右边的记为1，其余记为0
      *
      * @return 该方向的x坐标
      */
@@ -106,7 +106,7 @@ public enum Direction {
     }
 
     /**
-     * 获得该方向的y坐标。以CENTER方向的坐标为原点，在CENTER下边的记为-1，上边的记为1，其余记为0
+     * 获取该方向的y坐标。以CENTER方向的坐标为原点，在CENTER下边的记为-1，上边的记为1，其余记为0
      *
      * @return 该方向的y坐标
      */
@@ -115,7 +115,7 @@ public enum Direction {
     }
 
     /**
-     * 获得该方向的相反方向。例如this为左下方（DOWN_LEFT）则返回右上方（UP_RIGHT）
+     * 获取该方向的相反方向。例如this为左下方（DOWN_LEFT）则返回右上方（UP_RIGHT）
      *
      * @return 该方向的相反方向
      */

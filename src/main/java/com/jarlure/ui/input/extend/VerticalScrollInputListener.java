@@ -18,10 +18,10 @@ public abstract class VerticalScrollInputListener implements MouseInputListener 
     private UIComponent scene;
     private UIComponent object;
     protected float wheelRollingSpeed;
-    protected float startYTop =NULL;
+    protected float startYTop = NULL;
 
-    public VerticalScrollInputListener(UIComponent scrollBar,UIComponent scene,UIComponent object){
-        this(5,scrollBar,scene,object);
+    public VerticalScrollInputListener(UIComponent scrollBar, UIComponent scene, UIComponent object) {
+        this(5, scrollBar, scene, object);
     }
 
     /**
@@ -30,13 +30,14 @@ public abstract class VerticalScrollInputListener implements MouseInputListener 
      *
      * @param rollSpeed 滑轮滚动速度。单位是像素每次。默认值为每次触发滚轮事件相当于滚动条移动5像素。
      * @param scrollBar 滚动条。该组件需要有ScrollConverter
+     * @param window    视窗窗口的包围盒
      * @param object    观察对象
      */
-    public VerticalScrollInputListener(float rollSpeed,UIComponent scrollBar,UIComponent scene,UIComponent object){
-        this.wheelRollingSpeed=rollSpeed;
-        this.scrollBar=scrollBar;
-        this.scene=scene;
-        this.object=object;
+    public VerticalScrollInputListener(float rollSpeed, UIComponent scrollBar, UIComponent window, UIComponent object) {
+        this.wheelRollingSpeed = rollSpeed;
+        this.scrollBar = scrollBar;
+        this.scene = window;
+        this.object = object;
     }
 
     protected abstract SelectConverter getSelectConverter();
@@ -44,38 +45,38 @@ public abstract class VerticalScrollInputListener implements MouseInputListener 
     @Override
     public void onWheelRolling(MouseEvent mouse) {
         SelectConverter selectConverter = getSelectConverter();
-        if (selectConverter.isSelect(scene,mouse) || selectConverter.isSelect(scrollBar,mouse)){
-            setObjectYTop(scrollBar.get(ScrollConverter.class).getYTop()+ wheelRollingSpeed *Math.signum(mouse.dw));
+        if (selectConverter.isSelect(scene, mouse) || selectConverter.isSelect(scrollBar, mouse)) {
+            setObjectYTop(scrollBar.get(ScrollConverter.class).getYTop() + wheelRollingSpeed * Math.signum(mouse.dw));
         }
     }
 
     @Override
     public void onLeftButtonPress(MouseEvent mouse) {
-        if (!getSelectConverter().isSelect(scrollBar, mouse))return;
+        if (!getSelectConverter().isSelect(scrollBar, mouse)) return;
         ScrollConverter scrollConverter = scrollBar.get(ScrollConverter.class);
         float yTop = scrollConverter.getYTop();
-        if (mouse.y>yTop)return;
-        float yBottom = yTop-scrollConverter.getHeight();
-        if (mouse.y<yBottom)return;
+        if (mouse.y > yTop) return;
+        float yBottom = yTop - scrollConverter.getHeight();
+        if (mouse.y < yBottom) return;
         startYTop = yTop;
     }
 
     @Override
     public void onLeftButtonDragging(MouseEvent mouse) {
         if (startYTop != NULL) {
-            setObjectYTop(startYTop +mouse.y-mouse.getPressY());
+            setObjectYTop(startYTop + mouse.y - mouse.getPressY());
         }
     }
 
     @Override
     public void onLeftButtonRelease(MouseEvent mouse) {
-        startYTop =NULL;
+        startYTop = NULL;
     }
 
-    protected void setObjectYTop(float yTop){
-        LOG.log(Level.INFO,"yTop:{0}",yTop);
+    protected void setObjectYTop(float yTop) {
+        LOG.log(Level.INFO, "yTop:{0}", yTop);
         yTop = scrollBar.get(ScrollConverter.class).getObjectYTop(yTop);
-        object.move(0,yTop-object.get(AABB.class).getYTop());
+        object.move(0, yTop - object.get(AABB.class).getYTop());
     }
 
 }

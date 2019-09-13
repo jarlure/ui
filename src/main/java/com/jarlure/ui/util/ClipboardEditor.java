@@ -15,7 +15,7 @@ public class ClipboardEditor {
     /**
      * 从系统剪贴板中读取字符串
      *
-     * @return
+     * @return  剪贴板中的字符串。若无返回空字符串
      */
     public static String getTextFromClipboard() {
         try {
@@ -31,7 +31,7 @@ public class ClipboardEditor {
     /**
      * 将字符串设置进系统的剪贴板中
      *
-     * @param text
+     * @param text  要设置进剪贴板的字符串
      */
     public static void setTextToClipboard(String text) {
         Transferable tText = new StringSelection(text);

@@ -29,7 +29,7 @@ public class TextProperty extends EnumProperty implements WithUIComponent {
 
     /**
      * 组件的文本属性
-     * @param background
+     * @param background    文本背景图片
      */
     public TextProperty(Image background){
         this.src=background;

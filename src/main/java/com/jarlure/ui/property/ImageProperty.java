@@ -17,7 +17,7 @@ public class ImageProperty extends Property<Image> implements WithUIComponent {
     /**
      * 组件的图片属性
      *
-     * @param img
+     * @param img   图片参数
      */
     public ImageProperty(Image img) {
         super(img);

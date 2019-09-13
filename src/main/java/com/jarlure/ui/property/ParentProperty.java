@@ -14,7 +14,7 @@ public class ParentProperty extends Property<UIComponent> {
 
     /**
      * 组件的父结点属性
-     * @param parent
+     * @param parent    父组件参数
      */
     public ParentProperty(UIComponent parent) {
         super(parent);

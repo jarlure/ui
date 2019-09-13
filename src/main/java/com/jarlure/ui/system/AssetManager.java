@@ -10,7 +10,7 @@ public class AssetManager {
 
     /**
      * 使用前需要调用该方法对其初始化
-     * @param app
+     * @param app   系统
      */
     public static void initialize(Application app){
         instance=app.getAssetManager();

@@ -64,7 +64,7 @@ public class NinePatchEffect {
     /**
      * 判断是否存在水平拉伸数据
      *
-     * @return
+     * @return true如果存在水平拉伸数据；false如果不存在水平拉伸数据
      */
     public boolean existHorizontalScale() {
         return horizontalScale != null;
@@ -73,7 +73,7 @@ public class NinePatchEffect {
     /**
      * 判断是否存在垂直拉伸数据
      *
-     * @return
+     * @return true如果存在垂直拉伸数据；false如果不存在垂直拉伸数据
      */
     public boolean existVerticalScale() {
         return verticalScale != null;
@@ -82,7 +82,7 @@ public class NinePatchEffect {
     /**
      * 判断是否存在水平文本区域数据
      *
-     * @return
+     * @return true如果存在水平文本区域数据；false如果不存在水平文本区域数据
      */
     public boolean existHorizontalFill() {
         return horizontalFill != null;
@@ -91,7 +91,7 @@ public class NinePatchEffect {
     /**
      * 判断是否存在垂直文本区域数据
      *
-     * @return
+     * @return true如果存在垂直文本区域数据；false如果不存在垂直文本区域数据
      */
     public boolean existVerticalFill() {
         return verticalFill != null;
