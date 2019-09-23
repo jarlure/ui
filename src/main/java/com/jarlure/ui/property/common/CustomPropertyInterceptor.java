@@ -1,6 +1,6 @@
 package com.jarlure.ui.property.common;
 
-public interface EnumPropertyInterceptor {
+public interface CustomPropertyInterceptor {
 
     /**
      * 判断输入值是否可以通过检查。该方法常用于外部执行设置值操作，内部对该值进行检查防止设置不合法值的情景

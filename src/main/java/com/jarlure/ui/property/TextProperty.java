@@ -2,8 +2,8 @@ package com.jarlure.ui.property;
 
 import com.jarlure.ui.bean.Direction;
 import com.jarlure.ui.component.UIComponent;
-import com.jarlure.ui.property.common.EnumProperty;
-import com.jarlure.ui.property.common.EnumPropertyListener;
+import com.jarlure.ui.property.common.CustomProperty;
+import com.jarlure.ui.property.common.CustomPropertyListener;
 import com.jarlure.ui.util.ImageHandler;
 import com.jme3.texture.Image;
 import com.jme3.util.BufferUtils;
@@ -11,7 +11,7 @@ import com.jme3.util.NativeObjectManager;
 
 import java.nio.ByteBuffer;
 
-public class TextProperty extends EnumProperty implements WithUIComponent {
+public class TextProperty extends CustomProperty implements WithUIComponent {
 
     public enum Property {
         TEXT, ALIGN, SRC, DES
@@ -50,7 +50,7 @@ public class TextProperty extends EnumProperty implements WithUIComponent {
         startY = 0;
         endX = src.getWidth();
         endY = src.getHeight();
-        EnumPropertyListener listener = (property, oldValue, newValue) -> {
+        CustomPropertyListener listener = (property, oldValue, newValue) -> {
             if (src == null) return;
             if (text == null) return;
             if (newValue == null) return;

@@ -1,21 +1,17 @@
 package com.jarlure.ui.property;
 
 import com.jarlure.ui.component.UIComponent;
-import com.jarlure.ui.property.common.MapPropertyListener;
+import com.jarlure.ui.property.common.CustomProperty;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.math.Quaternion;
 
-import java.util.ArrayList;
-import java.util.List;
+public class AABB extends CustomProperty implements WithUIComponent {
 
-public class AABB implements WithUIComponent {
-
-    public static final String WIDTH = "width";
-    public static final String HEIGHT = "height";
-    public static final String THICKNESS = "thickness";
+    public enum Property {
+        WIDTH,HEIGHT,THICKNESS
+    }
 
     protected SpatialProperty spatialProperty;
-    protected List<MapPropertyListener<String, Float>> listenerList;
 
     /**
      * 用于反射自动创建。不要使用
@@ -124,7 +120,7 @@ public class AABB implements WithUIComponent {
         float oldWidth = getWidth();
         if (width == oldWidth) {
             spatialProperty.worldScaleChanged();
-            propertyChanged(WIDTH, oldWidth, width);
+            propertyChanged(Property.WIDTH, oldWidth, width);
             return;
         }
         float scale = width / oldWidth;
@@ -140,7 +136,7 @@ public class AABB implements WithUIComponent {
             float y = 2 * w * z;
             spatialProperty.scale(x * scale, y * scale, 1f);
         }
-        propertyChanged(WIDTH, oldWidth, width);
+        propertyChanged(Property.WIDTH, oldWidth, width);
     }
 
     /**
@@ -163,7 +159,7 @@ public class AABB implements WithUIComponent {
         float oldHeight = getHeight();
         if (height == oldHeight) {
             spatialProperty.worldScaleChanged();
-            propertyChanged(HEIGHT, oldHeight, height);
+            propertyChanged(Property.HEIGHT, oldHeight, height);
             return;
         }
         float scale = height / oldHeight;
@@ -179,7 +175,7 @@ public class AABB implements WithUIComponent {
             float y = -z * z + w * w;
             spatialProperty.scale(x * scale, y * scale, 1f);
         }
-        propertyChanged(HEIGHT, oldHeight, height);
+        propertyChanged(Property.HEIGHT, oldHeight, height);
     }
 
     /**
@@ -202,12 +198,12 @@ public class AABB implements WithUIComponent {
         float oldThickness = getThickness();
         if (thickness == oldThickness) {
             spatialProperty.worldScaleChanged();
-            propertyChanged(THICKNESS, oldThickness, thickness);
+            propertyChanged(Property.THICKNESS, oldThickness, thickness);
             return;
         }
         float scale = thickness / oldThickness;
         spatialProperty.scale(1f, 1f, scale);
-        propertyChanged(THICKNESS, oldThickness, thickness);
+        propertyChanged(Property.THICKNESS, oldThickness, thickness);
     }
 
     /**
@@ -264,33 +260,6 @@ public class AABB implements WithUIComponent {
         if (maxX < x) return false;
 
         return true;
-    }
-
-    /**
-     * 允许给正交包围盒添加监听器箭头包围盒尺寸的变化
-     *
-     * @param listener 监听器
-     */
-    public void addPropertyListener(MapPropertyListener<String, Float> listener) {
-        if (listenerList == null) listenerList = new ArrayList<>();
-        listenerList.add(listener);
-    }
-
-    /**
-     * 移除添加的监听器
-     *
-     * @param listener 要移除的监听器
-     */
-    public void removePropertyListener(MapPropertyListener<String, Float> listener) {
-        if (listenerList == null) return;
-        listenerList.remove(listener);
-    }
-
-    private void propertyChanged(String key, Float oldValue, Float newValue) {
-        if (listenerList == null) return;
-        for (MapPropertyListener<String, Float> listener : listenerList) {
-            listener.propertyChanged(key, oldValue, newValue);
-        }
     }
 
     @Override

@@ -1,14 +1,14 @@
 package com.jarlure.ui.property;
 
 import com.jarlure.ui.component.UIComponent;
-import com.jarlure.ui.property.common.EnumProperty;
+import com.jarlure.ui.property.common.CustomProperty;
 import com.jme3.bounding.BoundingVolume;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
-public class SpatialProperty extends EnumProperty implements WithUIComponent {
+public class SpatialProperty extends CustomProperty implements WithUIComponent {
 
     public enum Property {
         SPATIAL, NAME, CULL_HINT, WORLD_BOUND, PARENT,

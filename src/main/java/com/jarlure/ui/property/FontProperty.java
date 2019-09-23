@@ -1,10 +1,10 @@
 package com.jarlure.ui.property;
 
 import com.jarlure.ui.bean.Font;
-import com.jarlure.ui.property.common.EnumProperty;
+import com.jarlure.ui.property.common.CustomProperty;
 import com.jme3.math.ColorRGBA;
 
-public class FontProperty extends EnumProperty {
+public class FontProperty extends CustomProperty {
 
     public enum Property {
         NAME, SIZE, COLOR, OUTLINE_WIDTH, OUTLINE_COLOR

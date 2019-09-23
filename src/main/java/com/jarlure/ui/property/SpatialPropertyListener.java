@@ -1,9 +1,9 @@
 package com.jarlure.ui.property;
 
 import com.jarlure.ui.component.UIComponent;
-import com.jarlure.ui.property.common.EnumPropertyListener;
+import com.jarlure.ui.property.common.CustomPropertyListener;
 
-public class SpatialPropertyListener implements EnumPropertyListener, WithUIComponent {
+public class SpatialPropertyListener implements CustomPropertyListener, WithUIComponent {
 
     private UIComponent component;
 

@@ -1,6 +1,6 @@
 package com.jarlure.ui.property.common;
 
-public interface EnumPropertyFilter {
+public interface CustomPropertyFilter {
 
     /**
      * 过滤输入值。该方法常用于外部执行设置值操作，内部对该值进行过滤将超过范围的非法值转变为范围内的合法值的情景

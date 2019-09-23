@@ -3,19 +3,19 @@ package com.jarlure.ui.property.common;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class EnumProperty {
+public abstract class CustomProperty {
 
-    protected List<EnumPropertyFilter> inputFilterList;
-    protected List<EnumPropertyFilter> outputFilterList;
-    protected List<EnumPropertyInterceptor> interceptorList;
-    protected List<EnumPropertyListener> listenerList;
+    protected List<CustomPropertyFilter> inputFilterList;
+    protected List<CustomPropertyFilter> outputFilterList;
+    protected List<CustomPropertyInterceptor> interceptorList;
+    protected List<CustomPropertyListener> listenerList;
 
     /**
      * 添加属性值过滤器。该过滤器会在外部设置属性值时触发。
      *
      * @param inputFilter 在外部设置属性值时触发的过滤器
      */
-    public void addInputPropertyFilter(EnumPropertyFilter inputFilter) {
+    public void addInputPropertyFilter(CustomPropertyFilter inputFilter) {
         if (inputFilterList == null) inputFilterList = new ArrayList<>(1);
         inputFilterList.add(inputFilter);
     }
@@ -26,7 +26,7 @@ public abstract class EnumProperty {
      * @param inputFilter 在外部设置属性值时触发的过滤器
      * @return true如果能找到该过滤器；false如果找不到该过滤器
      */
-    public boolean removeInputPropertyFilter(EnumPropertyFilter inputFilter) {
+    public boolean removeInputPropertyFilter(CustomPropertyFilter inputFilter) {
         return inputFilterList != null && inputFilterList.remove(inputFilter);
     }
 
@@ -35,7 +35,7 @@ public abstract class EnumProperty {
      *
      * @param outputFilter 在外部获取属性值时触发的过滤器
      */
-    public void addOutputPropertyFilter(EnumPropertyFilter outputFilter) {
+    public void addOutputPropertyFilter(CustomPropertyFilter outputFilter) {
         if (outputFilterList == null) outputFilterList = new ArrayList<>(1);
         outputFilterList.add(outputFilter);
     }
@@ -46,7 +46,7 @@ public abstract class EnumProperty {
      * @param outputFilter 在外部获取属性值时触发的过滤器
      * @return true如果能找到该过滤器；false如果找不到该过滤器
      */
-    public boolean removeOutputPropertyFilter(EnumPropertyFilter outputFilter) {
+    public boolean removeOutputPropertyFilter(CustomPropertyFilter outputFilter) {
         return outputFilterList != null && outputFilterList.remove(outputFilter);
     }
 
@@ -59,7 +59,7 @@ public abstract class EnumProperty {
      */
     protected Object filterInputProperty(Enum property, Object value) {
         if (inputFilterList == null) return value;
-        for (EnumPropertyFilter filter : inputFilterList) {
+        for (CustomPropertyFilter filter : inputFilterList) {
             value = filter.filterProperty(property, value);
         }
         return value;
@@ -74,7 +74,7 @@ public abstract class EnumProperty {
      */
     protected Object filterOutputProperty(Enum property, Object value) {
         if (outputFilterList == null) return value;
-        for (EnumPropertyFilter filter : outputFilterList) {
+        for (CustomPropertyFilter filter : outputFilterList) {
             value = filter.filterProperty(property, value);
         }
         return value;
@@ -85,7 +85,7 @@ public abstract class EnumProperty {
      *
      * @param interceptor 在外部设置属性值时触发的拦截器
      */
-    public void addPropertyInterceptor(EnumPropertyInterceptor interceptor) {
+    public void addPropertyInterceptor(CustomPropertyInterceptor interceptor) {
         if (interceptorList == null) interceptorList = new ArrayList<>(1);
         interceptorList.add(interceptor);
     }
@@ -96,7 +96,7 @@ public abstract class EnumProperty {
      * @param interceptor 在外部设置属性值时触发的拦截器
      * @return true如果能找到该拦截器；false如果找不到该拦截器
      */
-    public boolean removePropertyInterceptor(EnumPropertyInterceptor interceptor) {
+    public boolean removePropertyInterceptor(CustomPropertyInterceptor interceptor) {
         return interceptorList != null && interceptorList.remove(interceptor);
     }
 
@@ -110,7 +110,7 @@ public abstract class EnumProperty {
     protected boolean interceptProperty(Enum property, Object value) {
         boolean pass = true;
         if (interceptorList == null) return pass;
-        for (EnumPropertyInterceptor filter : interceptorList) {
+        for (CustomPropertyInterceptor filter : interceptorList) {
             pass = filter.interceptProperty(property, value) && pass;
         }
         return pass;
@@ -121,7 +121,7 @@ public abstract class EnumProperty {
      *
      * @param listener 在外部设置属性值时触发的监听器
      */
-    public void addPropertyListener(EnumPropertyListener listener) {
+    public void addPropertyListener(CustomPropertyListener listener) {
         if (listenerList == null) listenerList = new ArrayList<>(1);
         listenerList.add(listener);
     }
@@ -132,8 +132,12 @@ public abstract class EnumProperty {
      * @param listener 要移除的监听器
      * @return true如果能找到该监听器；false如果找不到该监听器
      */
-    public boolean removePropertyListener(EnumPropertyListener listener) {
+    public boolean removePropertyListener(CustomPropertyListener listener) {
         return listenerList != null && listenerList.remove(listener);
+    }
+
+    protected void propertyChanged(Enum property){
+        propertyChanged(property,null,null);
     }
 
     /**
@@ -145,7 +149,7 @@ public abstract class EnumProperty {
      */
     protected void propertyChanged(Enum property, Object oldValue, Object newValue) {
         if (listenerList == null) return;
-        for (EnumPropertyListener listener : listenerList) {
+        for (CustomPropertyListener listener : listenerList) {
             listener.propertyChanged(property, oldValue, newValue);
         }
     }

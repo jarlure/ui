@@ -1,6 +1,6 @@
 package com.jarlure.ui.property.common;
 
-public interface EnumPropertyListener {
+public interface CustomPropertyListener {
 
     /**
      * 属性对象的引用发生了变化
