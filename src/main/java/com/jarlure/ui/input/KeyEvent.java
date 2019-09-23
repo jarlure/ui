@@ -12,20 +12,21 @@ public class KeyEvent {
     private boolean isRAltPressed;
     private boolean consumed;
 
-    public KeyEvent(int code, char value,boolean isLShiftPressed,boolean isRShiftPressed,boolean isLCtrlPressed,boolean isRCtrlPressed,boolean isLAltPressed,boolean isRAltPressed){
+    public KeyEvent(int code, char value, boolean isLShiftPressed, boolean isRShiftPressed, boolean isLCtrlPressed, boolean isRCtrlPressed, boolean isLAltPressed, boolean isRAltPressed) {
         this.code = code;
         this.value = value;
-        this.isLShiftPressed=isLShiftPressed;
-        this.isRShiftPressed=isRShiftPressed;
-        this.isLCtrlPressed=isLCtrlPressed;
-        this.isRCtrlPressed=isRCtrlPressed;
-        this.isLAltPressed=isLAltPressed;
-        this.isRAltPressed=isRAltPressed;
+        this.isLShiftPressed = isLShiftPressed;
+        this.isRShiftPressed = isRShiftPressed;
+        this.isLCtrlPressed = isLCtrlPressed;
+        this.isRCtrlPressed = isRCtrlPressed;
+        this.isLAltPressed = isLAltPressed;
+        this.isRAltPressed = isRAltPressed;
     }
 
     /**
      * 获取按键值。详见com.jme3.input.KeyInput
-     * @return  按键值。
+     *
+     * @return 按键值。
      */
     public int getCode() {
         return code;
@@ -33,53 +34,54 @@ public class KeyEvent {
 
     /**
      * 获取按键字符
-     * @return  按键字符
+     *
+     * @return 按键字符
      */
     public char getValue() {
         return value;
     }
 
-    public boolean isShiftPressed(){
+    public boolean isShiftPressed() {
         return isLShiftPressed || isRShiftPressed;
     }
 
-    public boolean isCtrlPressed(){
+    public boolean isCtrlPressed() {
         return isLCtrlPressed || isRCtrlPressed;
     }
 
-    public boolean isAltPressed(){
+    public boolean isAltPressed() {
         return isLAltPressed || isRAltPressed;
     }
 
-    public boolean isAnyControlKeyPressed(){
+    public boolean isAnyControlKeyPressed() {
         return isShiftPressed() || isCtrlPressed() || isAltPressed();
     }
 
-    public boolean isShiftPressedOnly(){
+    public boolean isShiftPressedOnly() {
         return isShiftPressed() && !isCtrlPressed() && !isAltPressed();
     }
 
-    public boolean isCtrlPressedOnly(){
+    public boolean isCtrlPressedOnly() {
         return isCtrlPressed() && !isShiftPressed() && !isAltPressed();
     }
 
-    public boolean isAltPressedOnly(){
-        return isAltPressed() && !isShiftPressed() && !isCtrlPressed() ;
+    public boolean isAltPressedOnly() {
+        return isAltPressed() && !isShiftPressed() && !isCtrlPressed();
     }
 
-    public boolean isCtrlAndAltPressed(){
+    public boolean isCtrlAndAltPressed() {
         return isCtrlPressed() && isAltPressed();
     }
 
-    public boolean isCtrlAndShiftPressed(){
+    public boolean isCtrlAndShiftPressed() {
         return isCtrlPressed() && isShiftPressed();
     }
 
-    public boolean isAltAndShiftPressed(){
+    public boolean isAltAndShiftPressed() {
         return isAltPressed() && isShiftPressed();
     }
 
-    public boolean isAllControlKeyPressed(){
+    public boolean isAllControlKeyPressed() {
         return isShiftPressed() && isCtrlPressed() && isAltPressed();
     }
 
@@ -109,7 +111,8 @@ public class KeyEvent {
 
     /**
      * 判断是否已有监听器处理该事件。
-     * @return  若有标记则返回true；否则返回false
+     *
+     * @return 若有标记则返回true；否则返回false
      */
     public boolean isConsumed() {
         return consumed;
@@ -120,19 +123,19 @@ public class KeyEvent {
      * 处理该事件。
      */
     public void setConsumed() {
-        consumed=true;
+        consumed = true;
     }
 
     /**
      * 重置已有监听器处理该事件标记。
      */
-    public void resetConsumed(){
-        consumed=false;
+    public void resetConsumed() {
+        consumed = false;
     }
 
     @Override
     public String toString() {
-        StringBuilder result=new StringBuilder(112);
+        StringBuilder result = new StringBuilder(112);
         result.append("code=").append(code).append('；');
         result.append("value=").append(value).append('；');
         result.append("isShiftPressed(").append(isLShiftPressed).append(',').append(isRShiftPressed).append(")；");

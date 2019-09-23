@@ -22,6 +22,7 @@ public class SwitchEffect {
 
     /**
      * 添加一张用于切换的备用图片
+     *
      * @param index 用于寻找该图片的索引值
      * @param img   图片
      */
@@ -31,8 +32,9 @@ public class SwitchEffect {
 
     /**
      * 移除给定索引值对应的图片
+     *
      * @param index 添加图片时设置的索引值
-     * @return  移除的图片。如果未找到则返回null
+     * @return 移除的图片。如果未找到则返回null
      */
     public Image removeImage(int index) {
         return imgMap.remove(index);
@@ -40,7 +42,8 @@ public class SwitchEffect {
 
     /**
      * 获得当前图片对应的索引值
-     * @return  当前图片对应的索引值
+     *
+     * @return 当前图片对应的索引值
      */
     public int getIndexOfCurrentImage() {
         return currentIndex;
@@ -48,8 +51,9 @@ public class SwitchEffect {
 
     /**
      * 切换到给定索引值对应的图片
+     *
      * @param index 图片对应的索引值
-     * @return  是否存在该索引值对应的图片
+     * @return 是否存在该索引值对应的图片
      */
     public boolean switchTo(int index) {
         if (!imgMap.containsKey(index)) return false;

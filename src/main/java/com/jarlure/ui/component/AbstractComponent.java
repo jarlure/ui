@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class AbstractComponent implements UIComponent{
+public abstract class AbstractComponent implements UIComponent {
 
     private static final Logger LOG = Logger.getLogger(AbstractComponent.class.getSimpleName());
 
@@ -25,14 +25,19 @@ public abstract class AbstractComponent implements UIComponent{
 
     @Override
     public void setDepth(float depth) {
-        get(SpatialProperty.class).move(0,0,depth-getDepth());
+        get(SpatialProperty.class).move(0, 0, depth - getDepth());
+    }
+
+    @Override
+    public void scale(float percent) {
+        scale(percent, percent);
     }
 
     @Override
     public void scale(float x_percent, float y_percent) {
-        if(Float.isNaN(x_percent)) throw new IllegalArgumentException("参数x_percent为无穷大！");
-        if(Float.isNaN(y_percent)) throw new IllegalArgumentException("参数y_percent为无穷大！");
-        get(SpatialProperty.class).scale(x_percent,y_percent,1);
+        if (Float.isNaN(x_percent)) throw new IllegalArgumentException("参数x_percent为无穷大！");
+        if (Float.isNaN(y_percent)) throw new IllegalArgumentException("参数y_percent为无穷大！");
+        get(SpatialProperty.class).scale(x_percent, y_percent, 1);
     }
 
     @Override
@@ -42,7 +47,7 @@ public abstract class AbstractComponent implements UIComponent{
         Vector3f worldScale = spatialProperty.getWorldScale();
         dx = dx * localScale.getX() / worldScale.getX();
         dy = dy * localScale.getY() / worldScale.getY();
-        spatialProperty.move(dx,dy,0);
+        spatialProperty.move(dx, dy, 0);
     }
 
     @Override
@@ -50,27 +55,27 @@ public abstract class AbstractComponent implements UIComponent{
         float halfAngle = 0.5f * angle;
         float w = FastMath.cos(halfAngle);
         float z = FastMath.sin(halfAngle);
-        Quaternion q = new Quaternion(0,0,z,w);
+        Quaternion q = new Quaternion(0, 0, z, w);
         get(SpatialProperty.class).rotate(q);
     }
 
     @Override
     public boolean isVisible() {
         Spatial.CullHint hint = get(SpatialProperty.class).getCullHint();
-        return hint !=null && hint != Spatial.CullHint.Always;
+        return hint != null && hint != Spatial.CullHint.Always;
     }
 
     @Override
     public void setVisible(boolean visible) {
-        Spatial.CullHint cullHint=visible ? Spatial.CullHint.Inherit : Spatial.CullHint.Always;
+        Spatial.CullHint cullHint = visible ? Spatial.CullHint.Inherit : Spatial.CullHint.Always;
         get(SpatialProperty.class).setCullHint(cullHint);
     }
 
     @Override
     public boolean toggleVisible() {
         SpatialProperty spatialProperty = get(SpatialProperty.class);
-        boolean visible = spatialProperty.getCullHint()==Spatial.CullHint.Always;
-        Spatial.CullHint cullHint=visible ? Spatial.CullHint.Inherit : Spatial.CullHint.Always;
+        boolean visible = spatialProperty.getCullHint() == Spatial.CullHint.Always;
+        Spatial.CullHint cullHint = visible ? Spatial.CullHint.Inherit : Spatial.CullHint.Always;
         spatialProperty.setCullHint(cullHint);
         return visible;
     }
@@ -87,11 +92,11 @@ public abstract class AbstractComponent implements UIComponent{
             LOG.log(Level.WARNING, "在{0}中未找到类型{1}对应的值", new Object[]{this, type});
             try {
                 value = type.newInstance();
-                if (value instanceof WithUIComponent){
-                    ((WithUIComponent)value).set(this);
+                if (value instanceof WithUIComponent) {
+                    ((WithUIComponent) value).set(this);
                 }
                 set(type, value);
-                LOG.log(Level.INFO,"已为{0}自动创建了{1}的类实例",new Object[]{this,type});
+                LOG.log(Level.INFO, "已为{0}自动创建了{1}的类实例", new Object[]{this, type});
             } catch (IllegalAccessException | InstantiationException e) {
                 LOG.log(Level.WARNING, "无法创建{0}的类实例，请检查该类是否存在空构造器", type);
                 return null;

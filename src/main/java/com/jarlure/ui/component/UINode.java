@@ -16,7 +16,7 @@ public class UINode extends AbstractComponent {
     /**
      * 结点。用于连接多个组件。与面板不同，结点的尺寸取决于连接组件的尺寸。因此结点不适合动态增删子组件。
      *
-     * @param name 结点的名字
+     * @param name 组件名
      */
     public UINode(String name) {
         view = new AutoUpdatedNode(name);

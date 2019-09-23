@@ -11,6 +11,7 @@ public interface WithUIComponent {
 
     /**
      * 用于对自动创建的、实现了该方法的属性自动调用该方法初始化
+     *
      * @param component 组件
      */
     void set(UIComponent component);

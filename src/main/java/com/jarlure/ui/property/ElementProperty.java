@@ -2,7 +2,7 @@ package com.jarlure.ui.property;
 
 import com.jarlure.ui.component.UIComponent;
 import com.jarlure.ui.property.common.ListProperty;
-import com.jarlure.ui.property.common.ListPropertyListener;
+import com.jarlure.ui.property.common.ListPropertyAdapter;
 import com.jme3.material.Material;
 import com.jme3.math.Vector4f;
 import com.jme3.scene.Geometry;
@@ -22,7 +22,7 @@ public class ElementProperty extends ListProperty<UIComponent> implements WithUI
         listener.set(component);
         this.addPropertyListener(listener);
         //确保ElementProperty总是ChildrenProperty的子集
-        component.get(ChildrenProperty.class).addPropertyListener(new ListPropertyListener<UIComponent>() {
+        component.get(ChildrenProperty.class).addPropertyListener(new ListPropertyAdapter<UIComponent>() {
             @Override
             public void propertyAdded(int index, UIComponent[] value) {
             }
@@ -35,7 +35,7 @@ public class ElementProperty extends ListProperty<UIComponent> implements WithUI
             }
         });
         if (component.exist(RangeProperty.class)) {
-            this.addPropertyListener(new ListPropertyListener<UIComponent>() {
+            this.addPropertyListener(new ListPropertyAdapter<UIComponent>() {
                 @Override
                 public void propertyAdded(int index, UIComponent element) {
                     Vector4f range = component.get(RangeProperty.class).getValue();

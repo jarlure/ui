@@ -159,7 +159,7 @@ public class Property<T> {
      */
     protected void propertyChanged(T oldValue, T newValue) {
         if (listenerList == null) return;
-        for (PropertyListener listener : listenerList) {
+        for (PropertyListener<T> listener : listenerList) {
             listener.propertyChanged(oldValue, newValue);
         }
     }

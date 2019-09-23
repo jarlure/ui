@@ -6,6 +6,7 @@ import com.jme3.bounding.BoundingBox;
 import com.jme3.math.Quaternion;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AABB implements WithUIComponent {
 
@@ -14,7 +15,7 @@ public class AABB implements WithUIComponent {
     public static final String THICKNESS = "thickness";
 
     protected SpatialProperty spatialProperty;
-    protected ArrayList<MapPropertyListener<String, Float>> listenerList;
+    protected List<MapPropertyListener<String, Float>> listenerList;
 
     /**
      * 用于反射自动创建。不要使用
@@ -183,7 +184,8 @@ public class AABB implements WithUIComponent {
 
     /**
      * 获得正交包围盒的厚度
-     * @return  正交包围盒的厚度
+     *
+     * @return 正交包围盒的厚度
      */
     public float getThickness() {
         BoundingBox box = (BoundingBox) spatialProperty.getWorldBound();
@@ -193,6 +195,7 @@ public class AABB implements WithUIComponent {
 
     /**
      * 设置正交包围盒的厚度
+     *
      * @param thickness 正交包围盒的厚度
      */
     public void setThickness(float thickness) {
@@ -209,7 +212,8 @@ public class AABB implements WithUIComponent {
 
     /**
      * 获得正交包围盒的左边水平坐标位置x值
-     * @return  正交包围盒的左边水平坐标位置x值
+     *
+     * @return 正交包围盒的左边水平坐标位置x值
      */
     public float getXLeft() {
         return getXCenter() - getXExtent();
@@ -217,7 +221,8 @@ public class AABB implements WithUIComponent {
 
     /**
      * 获得正交包围盒的右边水平坐标位置x值
-     * @return  正交包围盒的右边水平坐标位置x值
+     *
+     * @return 正交包围盒的右边水平坐标位置x值
      */
     public float getXRight() {
         return getXCenter() + getXExtent();
@@ -225,7 +230,8 @@ public class AABB implements WithUIComponent {
 
     /**
      * 获得正交包围盒的顶边垂直坐标位置y值
-     * @return  正交包围盒的顶边垂直坐标位置y值
+     *
+     * @return 正交包围盒的顶边垂直坐标位置y值
      */
     public float getYBottom() {
         return getYCenter() - getYExtent();
@@ -233,7 +239,8 @@ public class AABB implements WithUIComponent {
 
     /**
      * 获得正交包围盒的底边垂直坐标位置y值
-     * @return  正交包围盒的底边垂直坐标位置y值
+     *
+     * @return 正交包围盒的底边垂直坐标位置y值
      */
     public float getYTop() {
         return getYCenter() + getYExtent();
@@ -241,9 +248,10 @@ public class AABB implements WithUIComponent {
 
     /**
      * 判断坐标点是否在正交包围盒内部或边上
+     *
      * @param x 水平坐标位置x值
      * @param y 垂直坐标位置y值
-     * @return  如果坐标点落入正交包围盒内部或边上则返回true；否则返回false
+     * @return 如果坐标点落入正交包围盒内部或边上则返回true；否则返回false
      */
     public boolean contains(float x, float y) {
         float maxY = getYTop();
@@ -260,7 +268,8 @@ public class AABB implements WithUIComponent {
 
     /**
      * 允许给正交包围盒添加监听器箭头包围盒尺寸的变化
-     * @param listener  监听器
+     *
+     * @param listener 监听器
      */
     public void addPropertyListener(MapPropertyListener<String, Float> listener) {
         if (listenerList == null) listenerList = new ArrayList<>();
@@ -269,7 +278,8 @@ public class AABB implements WithUIComponent {
 
     /**
      * 移除添加的监听器
-     * @param listener  要移除的监听器
+     *
+     * @param listener 要移除的监听器
      */
     public void removePropertyListener(MapPropertyListener<String, Float> listener) {
         if (listenerList == null) return;

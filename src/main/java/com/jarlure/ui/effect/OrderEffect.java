@@ -4,6 +4,7 @@ import com.jarlure.ui.component.UIComponent;
 import com.jarlure.ui.converter.DynamicCoord;
 import com.jarlure.ui.property.AABB;
 import com.jarlure.ui.property.common.ListProperty;
+import com.jarlure.ui.property.common.ListPropertyAdapter;
 import com.jarlure.ui.property.common.ListPropertyListener;
 
 import java.util.logging.Level;
@@ -17,11 +18,11 @@ public class OrderEffect {
     protected DynamicCoord fixSize;
     protected DynamicCoord fixPoint0, fixPoint1;
     protected ListProperty<UIComponent> componentListProperty;
-    protected ListPropertyListener<UIComponent> componentListListener = new ListPropertyListener<UIComponent>() {
+    protected ListPropertyListener<UIComponent> componentListListener = new ListPropertyAdapter<UIComponent>() {
         @Override
         public void propertyAdded(int index, UIComponent component) {
             AABB box = component.get(AABB.class);
-            if (fixSize!=null){
+            if (fixSize != null) {
                 float orderWidth = getOrderWidth();
                 float orderHeight = getOrderHeight();
                 box.setWidth(orderWidth);
@@ -48,21 +49,21 @@ public class OrderEffect {
         }
 
         @Override
-        public void foldAnonymousInnerClassCode(ListPropertyListener instance) {
+        protected void foldAnonymousInnerClassCode(ListPropertyAdapter instance) {
         }
     };
 
-    public OrderEffect(ListProperty<UIComponent> componentListProperty, DynamicCoord fixPoint0, DynamicCoord fixPoint1){
-        this(componentListProperty,null,fixPoint0,fixPoint1);
+    public OrderEffect(ListProperty<UIComponent> componentListProperty, DynamicCoord fixPoint0, DynamicCoord fixPoint1) {
+        this(componentListProperty, null, fixPoint0, fixPoint1);
     }
 
     /**
      * 整齐效果。该效果会使组件元素拥有统一的尺寸和间距，并设置以索引值作为参数代入直线方程中得到的位置。
      *
      * @param componentListProperty 组件元素
-     * @param fixSize   组件的统一尺寸。可以为null表示不统一尺寸
-     * @param fixPoint0 组件0的中心点位置坐标
-     * @param fixPoint1 组件1的中心点位置坐标
+     * @param fixSize               组件的统一尺寸。可以为null表示不统一尺寸
+     * @param fixPoint0             组件0的中心点位置坐标
+     * @param fixPoint1             组件1的中心点位置坐标
      */
     public OrderEffect(ListProperty<UIComponent> componentListProperty, DynamicCoord fixSize, DynamicCoord fixPoint0, DynamicCoord fixPoint1) {
         this.componentListProperty = componentListProperty;
@@ -75,7 +76,8 @@ public class OrderEffect {
 
     /**
      * 获得组件的统一宽度
-     * @return  组件的统一宽度
+     *
+     * @return 组件的统一宽度
      */
     protected float getOrderWidth() {
         return fixSize.getLocalX();
@@ -83,7 +85,8 @@ public class OrderEffect {
 
     /**
      * 获得组件的统一高度
-     * @return  组件的统一高度
+     *
+     * @return 组件的统一高度
      */
     protected float getOrderHeight() {
         return fixSize.getLocalY();
@@ -91,9 +94,10 @@ public class OrderEffect {
 
     /**
      * 计算给定组件N的位置水平坐标x值
-     * @param index 给定组件N的索引值
-     * @param currentFixPoint0  组件0的中心点位置水平坐标x值
-     * @return  位置水平坐标x值
+     *
+     * @param index            给定组件N的索引值
+     * @param currentFixPoint0 组件0的中心点位置水平坐标x值
+     * @return 位置水平坐标x值
      */
     protected float getOrderPositionX(int index, float currentFixPoint0) {
         float fix0 = fixPoint0.getWorldX();
@@ -104,9 +108,10 @@ public class OrderEffect {
 
     /**
      * 计算给定组件N的位置垂直坐标y值
-     * @param index 给定组件N的索引值
-     * @param currentFixPoint0  组件0的中心点位置垂直坐标y值
-     * @return  位置垂直坐标y值
+     *
+     * @param index            给定组件N的索引值
+     * @param currentFixPoint0 组件0的中心点位置垂直坐标y值
+     * @return 位置垂直坐标y值
      */
     protected float getOrderPositionY(int index, float currentFixPoint0) {
         float fix0 = fixPoint0.getWorldY();

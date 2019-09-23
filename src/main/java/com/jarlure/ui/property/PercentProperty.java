@@ -4,19 +4,20 @@ import com.jarlure.ui.property.common.Property;
 
 public class PercentProperty extends Property<Float> {
 
-    public PercentProperty(){
+    public PercentProperty() {
         super(0f);
     }
 
     /**
      * 组件的百分比属性
+     *
      * @param value 百分比参数
      */
-    public PercentProperty(float value){
+    public PercentProperty(float value) {
         super(value);
     }
 
-    public float getPercent(){
+    public float getPercent() {
         return super.getValue();
     }
 

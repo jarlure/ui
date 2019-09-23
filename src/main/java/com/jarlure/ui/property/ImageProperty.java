@@ -3,21 +3,22 @@ package com.jarlure.ui.property;
 import com.jarlure.ui.component.UIComponent;
 import com.jarlure.ui.property.common.Property;
 import com.jarlure.ui.property.common.PropertyListener;
-import com.jarlure.ui.util.ImageHandler;
 import com.jme3.scene.Geometry;
 import com.jme3.texture.Image;
 import com.jme3.texture.Texture2D;
 
 public class ImageProperty extends Property<Image> implements WithUIComponent {
 
+    /**
+     * 用于反射自动创建。不要使用
+     */
     public ImageProperty() {
-        super();
     }
 
     /**
      * 组件的图片属性
      *
-     * @param img   图片参数
+     * @param img 图片参数
      */
     public ImageProperty(Image img) {
         super(img);

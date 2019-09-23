@@ -15,16 +15,16 @@ public class MouseInputManager {
     private long timeWhenPress = NULL;
     private long timeWhenClick = NULL;
     private float timeLongPressing = NULL;
-    private float timeLongStay = NULL ;
+    private float timeLongStay = NULL;
     private int press_x = NULL, press_y = NULL;
     private int move_x = NULL, move_y = NULL;
     private SafeArrayList<MouseInputListener> queue;
 
-    public void add(MouseInputListener listener){
-        queue.add(0,listener);
+    public void add(MouseInputListener listener) {
+        queue.add(0, listener);
     }
 
-    public void remove(MouseInputListener listener){
+    public void remove(MouseInputListener listener) {
         queue.remove(listener);
     }
 
@@ -40,7 +40,7 @@ public class MouseInputManager {
             timeWhenPress = evt.getTime();
             timeLongPressing = 0;
 
-            MouseEvent mouse=new MouseEvent(evt.getX(),evt.getY(),pressedButtonIndex,true);
+            MouseEvent mouse = new MouseEvent(evt.getX(), evt.getY(), pressedButtonIndex, true);
             switch (pressedButtonIndex) {
                 case MouseInput.BUTTON_LEFT:
                     for (MouseInputListener listener : queue.getArray()) {
@@ -59,23 +59,23 @@ public class MouseInputManager {
         if (evt.isReleased() && pressedButtonIndex == evt.getButtonIndex()) {
             long dt = evt.getTime() - timeWhenPress;
             boolean isClicked = dt < 150000000 && press_x == evt.getX() && press_y == evt.getY();
-            boolean isDoubleClicked=false;
-            if (isClicked){
-                if (timeWhenClick==NULL) timeWhenClick=evt.getTime();
+            boolean isDoubleClicked = false;
+            if (isClicked) {
+                if (timeWhenClick == NULL) timeWhenClick = evt.getTime();
                 else {
                     dt = evt.getTime() - timeWhenClick;
-                    if (dt<200000000) {
-                        isDoubleClicked=true;
-                        timeWhenClick=NULL;
-                    }else{
-                        timeWhenClick=evt.getTime();
+                    if (dt < 200000000) {
+                        isDoubleClicked = true;
+                        timeWhenClick = NULL;
+                    } else {
+                        timeWhenClick = evt.getTime();
                     }
                 }
-            }else{
-                timeWhenClick=NULL;
+            } else {
+                timeWhenClick = NULL;
             }
 
-            MouseEvent mouse=new MouseEvent(press_x,press_y,evt.getX(),evt.getY(),evt.getButtonIndex(),false);
+            MouseEvent mouse = new MouseEvent(press_x, press_y, evt.getX(), evt.getY(), evt.getButtonIndex(), false);
             switch (pressedButtonIndex) {
                 case MouseInput.BUTTON_LEFT:
                     for (MouseInputListener listener : queue.getArray()) {
@@ -87,7 +87,7 @@ public class MouseInputManager {
                             listener.onLeftButtonClick(mouse);
                         }
                     }
-                    if (isDoubleClicked){
+                    if (isDoubleClicked) {
                         mouse.resetConsumed();
                         for (MouseInputListener listener : queue.getArray()) {
                             listener.onLeftButtonDoubleClick(mouse);
@@ -104,7 +104,7 @@ public class MouseInputManager {
                             listener.onRightButtonClick(mouse);
                         }
                     }
-                    if (isDoubleClicked){
+                    if (isDoubleClicked) {
                         mouse.resetConsumed();
                         for (MouseInputListener listener : queue.getArray()) {
                             listener.onRightButtonDoubleClick(mouse);
@@ -124,12 +124,12 @@ public class MouseInputManager {
         if (evt.getDX() != 0 || evt.getDY() != 0) {
             move_x = evt.getX();
             move_y = evt.getY();
-            timeLongStay=0;
-            MouseEvent mouse=null;
-            if (pressedButtonIndex!=NULL) {
+            timeLongStay = 0;
+            MouseEvent mouse = null;
+            if (pressedButtonIndex != NULL) {
                 if (timeLongPressing != NULL) timeLongPressing = NULL;
                 //鼠标拖拽
-                mouse = new MouseEvent(press_x, press_y,evt.getX(),evt.getY(),evt.getDX(),evt.getDY(),pressedButtonIndex,true);
+                mouse = new MouseEvent(press_x, press_y, evt.getX(), evt.getY(), evt.getDX(), evt.getDY(), pressedButtonIndex, true);
                 switch (pressedButtonIndex) {
                     case MouseInput.BUTTON_LEFT:
                         for (MouseInputListener listener : queue.getArray()) {
@@ -144,15 +144,15 @@ public class MouseInputManager {
                 }
             }
             //鼠标移动
-            if (mouse==null) mouse=new MouseEvent(evt.getX(),evt.getY(),evt.getDX(),evt.getDY());
+            if (mouse == null) mouse = new MouseEvent(evt.getX(), evt.getY(), evt.getDX(), evt.getDY());
             else mouse.resetConsumed();
-            for (MouseInputListener listener:queue.getArray()){
+            for (MouseInputListener listener : queue.getArray()) {
                 listener.onMove(mouse);
             }
             return;
         }
         if (evt.getDeltaWheel() != 0) {
-            MouseEvent mouse=new MouseEvent(evt.getX(),evt.getY(),evt.getDeltaWheel());
+            MouseEvent mouse = new MouseEvent(evt.getX(), evt.getY(), evt.getDeltaWheel());
             for (MouseInputListener listener : queue.getArray()) {
                 listener.onWheelRolling(mouse);
             }
@@ -172,12 +172,12 @@ public class MouseInputManager {
         updateLongStayTime(tpf);
     }
 
-    private void updateLongPressTime(float tpf){
+    private void updateLongPressTime(float tpf) {
         if (timeLongPressing == NULL) return;
         timeLongPressing += tpf;
         if (timeLongPressing > 0.5f) {
             timeLongPressing = NULL;
-            MouseEvent mouse=new MouseEvent(press_x,press_y,pressedButtonIndex,true);
+            MouseEvent mouse = new MouseEvent(press_x, press_y, pressedButtonIndex, true);
             switch (pressedButtonIndex) {
                 case MouseInput.BUTTON_LEFT:
                     for (MouseInputListener listener : queue.getArray()) {
@@ -193,13 +193,13 @@ public class MouseInputManager {
         }
     }
 
-    private void updateLongStayTime(float tpf){
-        if (timeLongStay==NULL)return;
+    private void updateLongStayTime(float tpf) {
+        if (timeLongStay == NULL) return;
         timeLongStay += tpf;
         if (timeLongStay > 0.5f) {
             timeLongStay = NULL;
-            MouseEvent mouse=new MouseEvent(move_x,move_y);
-            for (MouseInputListener listener:queue){
+            MouseEvent mouse = new MouseEvent(move_x, move_y);
+            for (MouseInputListener listener : queue) {
                 listener.onStayLongTime(mouse);
             }
         }

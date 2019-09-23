@@ -9,7 +9,7 @@ public class SpatialPropertyListener implements EnumPropertyListener, WithUIComp
 
     @Override
     public void set(UIComponent component) {
-        this.component=component;
+        this.component = component;
     }
 
     @Override
@@ -17,7 +17,7 @@ public class SpatialPropertyListener implements EnumPropertyListener, WithUIComp
         if (!(property instanceof SpatialProperty.Property)) return;
         boolean existChildren = component.exist(ChildrenProperty.class);
         ChildrenProperty childrenProperty = existChildren ? component.get(ChildrenProperty.class) : null;
-        if (childrenProperty!=null) existChildren=!childrenProperty.isEmpty();
+        if (childrenProperty != null) existChildren = !childrenProperty.isEmpty();
         switch ((SpatialProperty.Property) property) {
             case LOCAL_SCALE:
                 component.get(SpatialProperty.class).worldScaleChanged();
@@ -29,22 +29,22 @@ public class SpatialPropertyListener implements EnumPropertyListener, WithUIComp
                 component.get(SpatialProperty.class).worldTranslationChanged();
                 break;
             case WORLD_SCALE:
-                if (existChildren){
-                    for (UIComponent child:childrenProperty.value){
+                if (existChildren) {
+                    for (UIComponent child : childrenProperty.value) {
                         child.get(SpatialProperty.class).worldScaleChanged();
                     }
                 }
                 break;
             case WORLD_ROTATION:
-                if (existChildren){
-                    for (UIComponent child:childrenProperty.value){
+                if (existChildren) {
+                    for (UIComponent child : childrenProperty.value) {
                         child.get(SpatialProperty.class).worldRotationChanged();
                     }
                 }
                 break;
             case WORLD_TRANSLATION:
-                if (existChildren){
-                    for (UIComponent child:childrenProperty.value){
+                if (existChildren) {
+                    for (UIComponent child : childrenProperty.value) {
                         child.get(SpatialProperty.class).worldTranslationChanged();
                     }
                 }

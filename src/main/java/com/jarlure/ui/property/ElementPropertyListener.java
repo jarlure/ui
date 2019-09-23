@@ -1,9 +1,9 @@
 package com.jarlure.ui.property;
 
 import com.jarlure.ui.component.UIComponent;
-import com.jarlure.ui.property.common.ListPropertyListener;
+import com.jarlure.ui.property.common.ListPropertyAdapter;
 
-public class ElementPropertyListener implements ListPropertyListener<UIComponent>, WithUIComponent {
+public class ElementPropertyListener extends ListPropertyAdapter<UIComponent> implements WithUIComponent {
 
     private UIComponent component;
 

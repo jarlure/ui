@@ -13,13 +13,13 @@ public class ImagePropertyListener implements PropertyListener<Image>, WithUICom
 
     @Override
     public void set(UIComponent component) {
-        view= (Geometry) component.get(UIComponent.VIEW);
+        view = (Geometry) component.get(UIComponent.VIEW);
     }
 
     @Override
     public void propertyChanged(Image oldValue, Image newValue) {
-        if (oldValue==newValue)return;
-        if (newValue==null) newValue= ImageHandler.createEmptyImage(1,1);
+        if (oldValue == newValue) return;
+        if (newValue == null) newValue = ImageHandler.createEmptyImage(1, 1);
         Texture2D tex = (Texture2D) view.getMaterial().getParam("Texture").getValue();
         tex.setImage(newValue);
     }

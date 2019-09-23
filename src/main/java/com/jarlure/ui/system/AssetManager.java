@@ -10,14 +10,15 @@ public class AssetManager {
 
     /**
      * 使用前需要调用该方法对其初始化
-     * @param app   系统
+     *
+     * @param app 系统
      */
-    public static void initialize(Application app){
-        instance=app.getAssetManager();
+    public static void initialize(Application app) {
+        instance = app.getAssetManager();
     }
 
-    public static void cleanup(Application app){
-        instance=null;
+    public static void cleanup(Application app) {
+        instance = null;
     }
 
     public static MaterialDef getGuiMaterialDef() {
@@ -26,12 +27,12 @@ public class AssetManager {
         return matDef;
     }
 
-    public static MaterialDef getUnshadedMaterialDef(){
+    public static MaterialDef getUnshadedMaterialDef() {
         MaterialDef matDef = instance.loadAsset(new AssetKey<>("Common/MatDefs/Misc/Unshaded.j3md"));
         return matDef;
     }
 
-    public static Object loadAsset(String url){
+    public static Object loadAsset(String url) {
         Object data = instance.loadAsset(url);
         return data;
     }

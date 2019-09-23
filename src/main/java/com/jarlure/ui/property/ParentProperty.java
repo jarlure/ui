@@ -8,51 +8,51 @@ import java.util.List;
 
 public class ParentProperty extends Property<UIComponent> {
 
-    public ParentProperty(){
-        super();
+    public ParentProperty() {
     }
 
     /**
      * 组件的父结点属性
-     * @param parent    父组件参数
+     *
+     * @param parent 父组件参数
      */
     public ParentProperty(UIComponent parent) {
         super(parent);
     }
 
-    public UIComponent getParent(){
+    public UIComponent getParent() {
         return super.getValue();
     }
 
-    public void setParent(UIComponent parent){
+    public void setParent(UIComponent parent) {
         super.setValue(parent);
     }
 
-    public void detachFromParent(){
+    public void detachFromParent() {
         UIComponent parent = getParent();
-        if (parent==null)return;
-        if (!parent.exist(ChildrenProperty.class)){
-            parent=null;
+        if (parent == null) return;
+        if (!parent.exist(ChildrenProperty.class)) {
+            parent = null;
             return;
         }
         ChildrenProperty childrenProperty = parent.get(ChildrenProperty.class);
-        UIComponent theChild=null;
-        for (UIComponent child:childrenProperty.value){
-            if (this.equals(child.get(ParentProperty.class))){
-                theChild=child;
+        UIComponent theChild = null;
+        for (UIComponent child : childrenProperty.value) {
+            if (this.equals(child.get(ParentProperty.class))) {
+                theChild = child;
                 break;
             }
         }
-        if (theChild!=null) childrenProperty.detachChild(theChild);
-        parent=null;
+        if (theChild != null) childrenProperty.detachChild(theChild);
+        parent = null;
     }
 
-    public List<UIComponent> getAncestors(){
+    public List<UIComponent> getAncestors() {
         List<UIComponent> list = new ArrayList<>();
         UIComponent parent = getParent();
-        while (parent!=null){
+        while (parent != null) {
             list.add(parent);
-            if (!parent.exist(ParentProperty.class))break;
+            if (!parent.exist(ParentProperty.class)) break;
             parent = parent.get(ParentProperty.class).getParent();
         }
         return list;
@@ -69,4 +69,5 @@ public class ParentProperty extends Property<UIComponent> {
     public void setValue(UIComponent value) {
         setParent(value);
     }
+
 }

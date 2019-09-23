@@ -25,11 +25,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ImageHandler {
 
-    //临时ColorRGBA变量
-    public static final ColorRGBA TEMP_COLOR1 = new ColorRGBA();
-    public static final ColorRGBA TEMP_COLOR2 = new ColorRGBA();
-    public static final ColorRGBA TEMP_COLOR3 = new ColorRGBA();
-
     /**
      * 从本地磁盘加载图片
      *
@@ -91,7 +86,7 @@ public class ImageHandler {
         int width = channelRGBAImg[0][0].length;
         Image img = ImageHandler.createEmptyImage(width, height);
         ImageRaster raster = ImageRaster.create(img);
-        ColorRGBA color = TEMP_COLOR1;
+        ColorRGBA color = new ColorRGBA();
         for (int y = 0; y < height; y++) {
             int imgY = flipY ? height - 1 - y : y;
             for (int x = 0; x < width; x++) {
@@ -184,9 +179,9 @@ public class ImageHandler {
         if (endY > toImg.getHeight()) endY = toImg.getHeight();
         ImageRaster toRaster = ImageRaster.create(toImg);
         ImageRaster fromRaster = ImageRaster.create(fromImg);
-        ColorRGBA color = TEMP_COLOR1;
-        ColorRGBA A = TEMP_COLOR2;
-        ColorRGBA B = TEMP_COLOR3;
+        ColorRGBA color = new ColorRGBA();
+        ColorRGBA A = new ColorRGBA();
+        ColorRGBA B = new ColorRGBA();
         for (int y = startY, fromY = 0; y < endY; y++, fromY++) {
             for (int x = startX, fromX = 0; x < endX; x++, fromX++) {
                 fromRaster.getPixel(fromX, fromY, color);
@@ -222,7 +217,7 @@ public class ImageHandler {
         if (cutEndY > src.getHeight()) cutEndY = src.getHeight();
         ImageRaster imgRaster = ImageRaster.create(img);
         ImageRaster srcRaster = ImageRaster.create(src);
-        ColorRGBA color = TEMP_COLOR1;
+        ColorRGBA color = new ColorRGBA();
         int startX = pasteStartX + cutStartX < 0 ? -pasteStartX : cutStartX;
         int endX = pasteStartX + cutEndX > img.getWidth() ? img.getWidth() - pasteStartX : cutEndX;
         int startY = pasteStartY + cutStartY < 0 ? -pasteStartY : cutStartY;
@@ -278,7 +273,7 @@ public class ImageHandler {
         Image img = createEmptyImage(width, height);
         ImageRaster imgRaster = ImageRaster.create(img);
         ImageRaster img1Raster = ImageRaster.create(img1);
-        ColorRGBA store = TEMP_COLOR1;
+        ColorRGBA store = new ColorRGBA();
         for (int y = 0; y < img1.getHeight(); y++) {
             int py = y + img1py;
             for (int x = 0; x < img1.getWidth(); x++) {
@@ -286,9 +281,9 @@ public class ImageHandler {
                 imgRaster.setPixel(x + img1px, py, store);
             }
         }
-        ColorRGBA color = TEMP_COLOR1;
-        ColorRGBA A = TEMP_COLOR2;
-        ColorRGBA B = TEMP_COLOR3;
+        ColorRGBA color = new ColorRGBA();
+        ColorRGBA A = new ColorRGBA();
+        ColorRGBA B = new ColorRGBA();
         ImageRaster img2Raster = ImageRaster.create(img2);
         for (int y = 0; y < img2.getHeight(); y++) {
             int py = y + img2py;
@@ -324,7 +319,7 @@ public class ImageHandler {
         int endY = Math.min(startY + height, src.getHeight());
         ImageRaster srcRaster = ImageRaster.create(src);
         ImageRaster desRaster = ImageRaster.create(des);
-        ColorRGBA store = TEMP_COLOR1;
+        ColorRGBA store = new ColorRGBA();
         int srcX, srcY, desY, desX;
         for (srcY = Math.max(startY, 0); srcY < endY; srcY++) {
             desY = srcY - startY;
@@ -411,7 +406,7 @@ public class ImageHandler {
      */
     public static Image cutNinePatchImage(Image imgDot9, boolean[][] edgeInfoStore) {
         ImageRaster raster = ImageRaster.create(imgDot9);
-        ColorRGBA store = TEMP_COLOR1;
+        ColorRGBA store = new ColorRGBA();
         if (edgeInfoStore == null) edgeInfoStore = new boolean[4][];
         edgeInfoStore[0] = NinePatchHelper.readHorizontalPixel(raster.getHeight() - 1, raster, store);
         edgeInfoStore[1] = NinePatchHelper.readHorizontalPixel(0, raster, store);
@@ -621,9 +616,9 @@ public class ImageHandler {
         }
 
         private static void drawFont(ImageRaster img, int startX, int startY, int imgEndX, int imgEndY, BufferedImage bimg, int bimgStartX, int bimgEndX) {
-            ColorRGBA color = TEMP_COLOR1;
-            ColorRGBA A = TEMP_COLOR2;
-            ColorRGBA B = TEMP_COLOR3;
+            ColorRGBA color = new ColorRGBA();
+            ColorRGBA A = new ColorRGBA();
+            ColorRGBA B = new ColorRGBA();
             int endX = Math.min(imgEndX, startX + bimgEndX - bimgStartX);
             int endY = Math.min(imgEndY, startY + bimg.getHeight());
             for (int y = startY, flipY = bimg.getHeight() - 1; y < endY; y++, flipY--) {

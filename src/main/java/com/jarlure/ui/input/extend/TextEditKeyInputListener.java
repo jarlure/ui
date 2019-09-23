@@ -15,8 +15,7 @@ public abstract class TextEditKeyInputListener implements KeyInputListener {
     private UIComponent text;
 
     /**
-     * 单行文本编辑器的键盘输入监听器。目前该类有未处理的BUG：文本编辑输入监听器无法得知文本长度限制，因此鼠标位置索引可
-     *                                                        能会大于文本最大长度
+     * 单行文本编辑器的键盘输入监听器。
      *
      * @param text 单行文本。该组件需要有TextEditEffect
      */
@@ -99,9 +98,10 @@ public abstract class TextEditKeyInputListener implements KeyInputListener {
      * 光标左移并选中。你可以在Windows操作系统自带的文本编辑器中按下按键Ctrl+←重现这种操作
      */
     protected void leftMoveSelect() {
-        int index = getCursorPositionIndex().getValue() - 1;
-        if (index < 0) return;
-        getCursorPositionIndex().setValue(index);
+        Property<Integer> cursorPositionIndex = getCursorPositionIndex();
+        int index = cursorPositionIndex.getValue() - 1;
+        cursorPositionIndex.setValue(index);
+        if (index != cursorPositionIndex.getValue()) return;
         int fromIndex = getSelectFromIndex().getValue();
         getTextEditEffect().select(0, fromIndex, 0, index);
     }
@@ -110,9 +110,10 @@ public abstract class TextEditKeyInputListener implements KeyInputListener {
      * 光标左移。你可以在Windows操作系统自带的文本编辑器中按下按键←重现这种操作
      */
     protected void leftMoveCursor() {
-        int index = getCursorPositionIndex().getValue() - 1;
-        if (index < 0) return;
-        getCursorPositionIndex().setValue(index);
+        Property<Integer> cursorPositionIndex = getCursorPositionIndex();
+        int index = cursorPositionIndex.getValue() - 1;
+        cursorPositionIndex.setValue(index);
+        if (index != cursorPositionIndex.getValue()) return;
         getTextEditEffect().setCursorPosition(0, index);
         getSelectFromIndex().setValue(index);
     }
@@ -121,9 +122,10 @@ public abstract class TextEditKeyInputListener implements KeyInputListener {
      * 光标右移并选中。你可以在Windows操作系统自带的文本编辑器中按下按键Ctrl+→重现这种操作
      */
     protected void rightMoveSelect() {
-        int index = getCursorPositionIndex().getValue() + 1;
-        if (index > getTextProperty().getText().length()) return;
-        getCursorPositionIndex().setValue(index);
+        Property<Integer> cursorPositionIndex = getCursorPositionIndex();
+        int index = cursorPositionIndex.getValue() + 1;
+        cursorPositionIndex.setValue(index);
+        if (index != cursorPositionIndex.getValue()) return;
         int fromIndex = getSelectFromIndex().getValue();
         getTextEditEffect().select(0, fromIndex, 0, index);
     }
@@ -132,9 +134,10 @@ public abstract class TextEditKeyInputListener implements KeyInputListener {
      * 光标右移。你可以在Windows操作系统自带的文本编辑器中按下按键→重现这种操作
      */
     protected void rightMoveCursor() {
-        int index = getCursorPositionIndex().getValue() + 1;
-        if (index > getTextProperty().getText().length()) return;
-        getCursorPositionIndex().setValue(index);
+        Property<Integer> cursorPositionIndex = getCursorPositionIndex();
+        int index = cursorPositionIndex.getValue() + 1;
+        cursorPositionIndex.setValue(index);
+        if (index != cursorPositionIndex.getValue()) return;
         getTextEditEffect().setCursorPosition(0, index);
         getSelectFromIndex().setValue(index);
     }
@@ -158,10 +161,10 @@ public abstract class TextEditKeyInputListener implements KeyInputListener {
      * 这种操作
      */
     protected void deleteCursorLeft() {
-        int index = getCursorPositionIndex().getValue();
-        if (index <= 0) return;
-        index--;
-        getCursorPositionIndex().setValue(index);
+        Property<Integer> cursorPositionIndex = getCursorPositionIndex();
+        int index = cursorPositionIndex.getValue() - 1;
+        cursorPositionIndex.setValue(index);
+        if (index != cursorPositionIndex.getValue()) return;
         getSelectFromIndex().setValue(index);
         String text = getTextProperty().getText();
         StringBuilder builder = new StringBuilder(text);
@@ -192,9 +195,11 @@ public abstract class TextEditKeyInputListener implements KeyInputListener {
 
     /**
      * 插入一个字符。
+     *
      * @param c 字符
      */
     protected void insert(char c) {
+        //插入文本
         TextProperty textProperty = getTextProperty();
         String text = textProperty.getText();
         StringBuilder builder = new StringBuilder(text);
@@ -210,8 +215,12 @@ public abstract class TextEditKeyInputListener implements KeyInputListener {
             builder.insert(index, c);
         }
         textProperty.setText(builder.toString());
+
+        //更新光标
+        Property<Integer> cursorPositionIndex = getCursorPositionIndex();
         index++;
-        getCursorPositionIndex().setValue(index);
+        cursorPositionIndex.setValue(index);
+        index = cursorPositionIndex.getValue();
         getTextEditEffect().setCursorPosition(0, index);
         getSelectFromIndex().setValue(index);
     }
@@ -224,8 +233,6 @@ public abstract class TextEditKeyInputListener implements KeyInputListener {
         int fromIndex = getSelectFromIndex().getValue();
         int toIndex = getCursorPositionIndex().getValue();
         if (fromIndex == toIndex) return;
-        if (fromIndex < 0) return;
-        if (toIndex < 0) return;
         String text = getTextProperty().getText();
         if (text == null) return;
         int minIndex = Math.min(fromIndex, toIndex);
@@ -238,6 +245,7 @@ public abstract class TextEditKeyInputListener implements KeyInputListener {
      * 从系统剪贴板获得文本内容并粘贴到光标所在位置。你可以在Windows操作系统自带的文本编辑器中，按下Ctrl+V重现这种操作
      */
     protected void paste() {
+        //插入文本
         String textFromClipboard = ClipboardEditor.getTextFromClipboard();
         if (textFromClipboard == null || textFromClipboard.isEmpty()) return;
         TextProperty textProperty = getTextProperty();
@@ -255,8 +263,12 @@ public abstract class TextEditKeyInputListener implements KeyInputListener {
             builder.insert(index, textFromClipboard);
         }
         textProperty.setText(builder.toString());
+
+        //更新光标
+        Property<Integer> cursorPositionIndex = getCursorPositionIndex();
         index += textFromClipboard.length();
-        getCursorPositionIndex().setValue(index);
+        cursorPositionIndex.setValue(index);
+        index = cursorPositionIndex.getValue();
         getTextEditEffect().setCursorPosition(0, index);
         getSelectFromIndex().setValue(index);
     }

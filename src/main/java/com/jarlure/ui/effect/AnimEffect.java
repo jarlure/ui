@@ -16,7 +16,8 @@ public interface AnimEffect {
 
     /**
      * 判断动画是否已经播放完毕
-     * @return  动画是否已经播放完毕。如果是则返回true；否则返回false
+     *
+     * @return 动画是否已经播放完毕。如果是则返回true；否则返回false
      */
     boolean isFinished();
 

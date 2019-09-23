@@ -1,19 +1,19 @@
 package com.jarlure.ui.property;
 
 import com.jarlure.ui.component.UIComponent;
-import com.jarlure.ui.property.common.ListPropertyListener;
+import com.jarlure.ui.property.common.ListPropertyAdapter;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
-public class ChildrenPropertyListener implements ListPropertyListener<UIComponent>, WithUIComponent {
+public class ChildrenPropertyListener extends ListPropertyAdapter<UIComponent> implements WithUIComponent {
 
     private UIComponent component;
     private Node view;
 
     @Override
     public void set(UIComponent component) {
-        this.component=component;
-        this.view= (Node) component.get(UIComponent.VIEW);
+        this.component = component;
+        this.view = (Node) component.get(UIComponent.VIEW);
     }
 
     @Override

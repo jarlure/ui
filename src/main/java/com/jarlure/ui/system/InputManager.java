@@ -14,31 +14,32 @@ public class InputManager {
 
     /**
      * 使用前需要调用该方法对其初始化
-     * @param app   系统
+     *
+     * @param app 系统
      */
-    public static void initialize(Application app){
-        instance=new InputState(app);
+    public static void initialize(Application app) {
+        instance = new InputState(app);
         app.getStateManager().attach(instance);
     }
 
-    public static void cleanup(Application app){
+    public static void cleanup(Application app) {
         app.getInputManager().removeRawInputListener(instance);
         app.getStateManager().detach(instance);
     }
 
-    public static void add(MouseInputListener listener){
+    public static void add(MouseInputListener listener) {
         instance.mouseInputManager.add(listener);
     }
 
-    public static void remove(MouseInputListener listener){
+    public static void remove(MouseInputListener listener) {
         instance.mouseInputManager.remove(listener);
     }
 
-    public static void add(KeyInputListener listener){
+    public static void add(KeyInputListener listener) {
         instance.keyInputManager.add(listener);
     }
 
-    public static void remove(KeyInputListener listener){
+    public static void remove(KeyInputListener listener) {
         instance.keyInputManager.remove(listener);
     }
 
@@ -47,7 +48,7 @@ public class InputManager {
         private MouseInputManager mouseInputManager;
         private KeyInputManager keyInputManager;
 
-        public InputState(Application app){
+        public InputState(Application app) {
             mouseInputManager = new MouseInputManager();
             keyInputManager = new KeyInputManager();
             mouseInputManager.initialize(app);

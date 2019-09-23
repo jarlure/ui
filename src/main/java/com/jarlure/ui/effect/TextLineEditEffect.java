@@ -111,8 +111,8 @@ public class TextLineEditEffect extends TextEditEffect {
         if (startX == endX) return;
         ImageRaster srcRaster = ImageRaster.create(src);
         ImageRaster desRaster = ImageRaster.create(des);
-        ColorRGBA color1 = ImageHandler.TEMP_COLOR1;
-        ColorRGBA color2 = ImageHandler.TEMP_COLOR2;
+        ColorRGBA color1 = new ColorRGBA();
+        ColorRGBA color2 = new ColorRGBA();
         textMarkForSelection = new int[(endY - startY) * (endX - startX) / 2];
         for (int y = startY, i = 0; y < endY; y++) {
             for (int x = startX; x < endX; x++) {
@@ -151,7 +151,7 @@ public class TextLineEditEffect extends TextEditEffect {
         if (startX == endX) return;
         ImageRaster srcRaster = ImageRaster.create(src);
         ImageRaster desRaster = ImageRaster.create(des);
-        ColorRGBA color = ImageHandler.TEMP_COLOR1;
+        ColorRGBA color = new ColorRGBA();
         for (int y = startY, i = 0; y < endY; y++) {
             for (int x = startX; x < endX; x++) {
                 desRaster.getPixel(x, y, color);
@@ -182,7 +182,7 @@ public class TextLineEditEffect extends TextEditEffect {
         int startY = Math.max(textPosInImg[2 * toIndex + 1], textProperty.getStartY());
         int endY = Math.min(startY + (int) Math.ceil(1.1f * fontProperty.getSize()), textProperty.getEndY());
         ImageRaster desRaster = ImageRaster.create(des);
-        ColorRGBA color = ImageHandler.TEMP_COLOR1;
+        ColorRGBA color = new ColorRGBA();
         if (textMarkForCursor == null || textMarkForCursor.length < endY - startY)
             textMarkForCursor = new int[endY - startY];
         for (int y = startY, i = 0; y < endY; y++) {
@@ -205,7 +205,7 @@ public class TextLineEditEffect extends TextEditEffect {
         int startY = Math.max(textPosInImg[2 * toIndex + 1], textProperty.getStartY());
         int endY = Math.min(startY + (int) Math.ceil(1.1f * fontProperty.getSize()), textProperty.getEndY());
         ImageRaster desRaster = ImageRaster.create(des);
-        ColorRGBA color = ImageHandler.TEMP_COLOR1;
+        ColorRGBA color = new ColorRGBA();
         for (int y = startY, i = 0; y < endY; y++) {
             color.fromIntRGBA(textMarkForCursor[i++]);
             desRaster.setPixel(x, y, color);

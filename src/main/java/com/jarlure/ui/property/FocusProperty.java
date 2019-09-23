@@ -4,15 +4,16 @@ import com.jarlure.ui.property.common.Property;
 
 public class FocusProperty extends Property<Boolean> {
 
-    public FocusProperty(){
+    public FocusProperty() {
         setFocus(false);
     }
 
     /**
      * 组件的焦点属性
+     *
      * @param focus 焦点
      */
-    public FocusProperty(boolean focus){
+    public FocusProperty(boolean focus) {
         setFocus(focus);
     }
 
@@ -35,4 +36,5 @@ public class FocusProperty extends Property<Boolean> {
     public void setValue(Boolean value) {
         setFocus(value);
     }
+
 }

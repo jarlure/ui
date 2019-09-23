@@ -4,10 +4,11 @@ public interface EnumPropertyListener {
 
     /**
      * 属性对象的引用发生了变化
-     * @param property  属性名
-     * @param oldValue  属性对象的旧引用值
-     * @param newValue  属性对象的新引用值
+     *
+     * @param property 属性名
+     * @param oldValue 属性对象的旧引用值
+     * @param newValue 属性对象的新引用值
      */
-    void propertyChanged(Enum property,Object oldValue,Object newValue);
+    void propertyChanged(Enum property, Object oldValue, Object newValue);
 
 }

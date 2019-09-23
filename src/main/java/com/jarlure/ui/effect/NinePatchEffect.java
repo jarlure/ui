@@ -175,7 +175,7 @@ public class NinePatchEffect {
         }
         ImageRaster srcRaster = ImageRaster.create(src);
         ImageRaster desRaster = ImageRaster.create(des);
-        ColorRGBA color = ImageHandler.TEMP_COLOR1;
+        ColorRGBA color = new ColorRGBA();
         float repeatY = 0;
         for (int srcY = 0, desY = 0; srcY < src.getHeight(); srcY++) {
             if (verticalScale != null && verticalScale[srcY]) repeatY += scaleY;

@@ -28,21 +28,23 @@ public class ProgressEffect {
 
     /**
      * 设置进度百分比。
-     * @param percent   新的进度百分比
+     *
+     * @param percent 新的进度百分比
      */
     public void setPercent(float percent) {
         if (percent < 0) percent = 0;
         if (percent > 1) percent = 1;
         if (this.percent == percent) return;
         drawPercent(this.percent, percent);
-        this.percent=percent;
+        this.percent = percent;
         imageProperty.setImage(currentImg);
     }
 
     /**
      * 绘制进度。
-     * @param currentPercent    当前进度百分比
-     * @param aimPercent    新进度百分比
+     *
+     * @param currentPercent 当前进度百分比
+     * @param aimPercent     新进度百分比
      */
     protected void drawPercent(float currentPercent, float aimPercent) {
         int width = currentImg.getWidth();

@@ -12,7 +12,7 @@ public class FontProperty extends EnumProperty {
 
     private Font font;
 
-    public FontProperty(){
+    public FontProperty() {
         this(new Font());
     }
 
@@ -20,7 +20,7 @@ public class FontProperty extends EnumProperty {
      * 组件的字体属性。如果要触发监听器，请直接使用该属性提供的方法设置字体的名称、颜色、尺寸等参数；否则建议先获取Font
      * 然后直接设置，这样可以绕开监听器提高效率。
      *
-     * @param font  字体参数
+     * @param font 字体参数
      */
     public FontProperty(Font font) {
         this.font = font;
