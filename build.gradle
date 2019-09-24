@@ -17,9 +17,9 @@ repositories {
 
 def jme3 = [v:'3.1.0-stable', g:'org.jmonkeyengine']
 dependencies {
-    compileonly "${jme3.g}:jme3-core:${jme3.v}"
-    compileonly "${jme3.g}:jme3-lwjgl:${jme3.v}"
-    compileonly "${jme3.g}:jme3-desktop:${jme3.v}"
+    provided "${jme3.g}:jme3-core:${jme3.v}"
+    provided "${jme3.g}:jme3-lwjgl:${jme3.v}"
+    provided "${jme3.g}:jme3-desktop:${jme3.v}"
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
