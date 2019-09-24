@@ -16,7 +16,7 @@ public class SwitchEffect {
      * @param imageProperty 切换后的图片会自动设置进这个属性中
      */
     public SwitchEffect(ImageProperty imageProperty) {
-        this.imgMap = new IntMap<>(3);
+        this.imgMap = new IntMap<>(4,0.8f);
         this.imageProperty = imageProperty;
     }
 

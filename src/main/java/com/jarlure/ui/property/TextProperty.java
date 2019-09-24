@@ -115,13 +115,15 @@ public class TextProperty extends CustomProperty implements WithUIComponent {
      * 设置对齐方式
      *
      * @param align 新的对齐方式
+     * @return this
      */
-    public void setAlign(Direction align) {
+    public TextProperty setAlign(Direction align) {
         align = (Direction) filterInputProperty(Property.ALIGN, align);
-        if (align == null) return;
+        if (align == null) return this;
         Direction oldAlign = this.align;
         this.align = align;
         propertyChanged(Property.ALIGN, oldAlign, align);
+        return this;
     }
 
     /**

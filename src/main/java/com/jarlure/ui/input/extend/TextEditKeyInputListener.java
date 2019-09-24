@@ -3,14 +3,14 @@ package com.jarlure.ui.input.extend;
 import com.jarlure.ui.component.UIComponent;
 import com.jarlure.ui.effect.TextEditEffect;
 import com.jarlure.ui.input.KeyEvent;
-import com.jarlure.ui.input.KeyInputListener;
+import com.jarlure.ui.input.KeyInputAdapter;
 import com.jarlure.ui.property.FocusProperty;
 import com.jarlure.ui.property.TextProperty;
 import com.jarlure.ui.property.common.Property;
 import com.jarlure.ui.util.ClipboardEditor;
 import com.jme3.input.KeyInput;
 
-public abstract class TextEditKeyInputListener implements KeyInputListener {
+public abstract class TextEditKeyInputListener extends KeyInputAdapter {
 
     private UIComponent text;
 

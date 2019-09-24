@@ -4,11 +4,11 @@ import com.jarlure.ui.component.UIComponent;
 import com.jarlure.ui.converter.SelectConverter;
 import com.jarlure.ui.effect.SwitchEffect;
 import com.jarlure.ui.input.MouseEvent;
-import com.jarlure.ui.input.MouseInputListener;
+import com.jarlure.ui.input.MouseInputAdapter;
 
 import static com.jarlure.ui.input.extend.ButtonMouseInputListener.*;
 
-public abstract class SpringButtonMouseInputListener implements MouseInputListener {
+public abstract class SpringButtonMouseInputListener extends MouseInputAdapter {
 
     private UIComponent button;
     protected int state = 0;

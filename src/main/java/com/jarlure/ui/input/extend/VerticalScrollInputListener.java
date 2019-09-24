@@ -4,13 +4,13 @@ import com.jarlure.ui.component.UIComponent;
 import com.jarlure.ui.converter.ScrollConverter;
 import com.jarlure.ui.converter.SelectConverter;
 import com.jarlure.ui.input.MouseEvent;
-import com.jarlure.ui.input.MouseInputListener;
+import com.jarlure.ui.input.MouseInputAdapter;
 import com.jarlure.ui.property.AABB;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class VerticalScrollInputListener implements MouseInputListener {
+public abstract class VerticalScrollInputListener extends MouseInputAdapter {
 
     private static final Logger LOG = Logger.getLogger(VerticalScrollInputListener.class.getName());
     protected static final int NULL = Integer.MAX_VALUE;

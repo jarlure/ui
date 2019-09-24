@@ -5,13 +5,13 @@ import com.jarlure.ui.converter.IndexConverter;
 import com.jarlure.ui.converter.SelectConverter;
 import com.jarlure.ui.effect.TextEditEffect;
 import com.jarlure.ui.input.MouseEvent;
-import com.jarlure.ui.input.MouseInputListener;
+import com.jarlure.ui.input.MouseInputAdapter;
 import com.jarlure.ui.property.AABB;
 import com.jarlure.ui.property.FocusProperty;
 import com.jarlure.ui.property.TextProperty;
 import com.jarlure.ui.property.common.Property;
 
-public abstract class TextEditMouseInputListener implements MouseInputListener {
+public abstract class TextEditMouseInputListener extends MouseInputAdapter {
 
     private UIComponent text;
 
@@ -60,15 +60,15 @@ public abstract class TextEditMouseInputListener implements MouseInputListener {
                 public int getColumnIndex(int cursorX, int cursorY) {
                     AABB box = text.get(AABB.class);
                     if (!box.contains(cursorX, cursorY)) return IndexConverter.EXCEPTION_NOT_FOUND;
-
+                    int cursorLocalX = (int) (cursorX-box.getXLeft());//相对于图片左下角的位置坐标
                     int[] textPosInImg = text.get(TextProperty.class).getTextPosInImg();
                     if (textPosInImg == null || textPosInImg.length < 2) return IndexConverter.EXCEPTION_NOT_FOUND;
-                    if (cursorX < textPosInImg[0]) return IndexConverter.EXCEPTION_LESS_THAN_MIN;
-                    if (textPosInImg[textPosInImg.length - 2] < cursorX)
+                    if (cursorLocalX < textPosInImg[0]) return IndexConverter.EXCEPTION_LESS_THAN_MIN;
+                    if (textPosInImg[textPosInImg.length - 2] < cursorLocalX)
                         return IndexConverter.EXCEPTION_GRATER_THAN_MAX;
                     for (int i = textPosInImg.length - 2; i >= 2; i -= 2) {
-                        if (cursorX < textPosInImg[i - 2]) continue;
-                        if (Math.abs(textPosInImg[i] - cursorX) <= Math.abs(textPosInImg[i - 2] - cursorX))
+                        if (cursorLocalX < textPosInImg[i - 2]) continue;
+                        if (Math.abs(textPosInImg[i] - cursorLocalX) <= Math.abs(textPosInImg[i - 2] - cursorLocalX))
                             return i / 2;
                         else return i / 2 - 1;
                     }

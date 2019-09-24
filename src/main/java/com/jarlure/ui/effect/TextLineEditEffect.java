@@ -178,7 +178,7 @@ public class TextLineEditEffect extends TextEditEffect {
         }
         if (des == null) return;
         int[] textPosInImg = textProperty.getTextPosInImg();
-        int x = textPosInImg[2 * toIndex];
+        int x = Math.min(textPosInImg[2 * toIndex], textProperty.getEndX()-1);
         int startY = Math.max(textPosInImg[2 * toIndex + 1], textProperty.getStartY());
         int endY = Math.min(startY + (int) Math.ceil(1.1f * fontProperty.getSize()), textProperty.getEndY());
         ImageRaster desRaster = ImageRaster.create(des);
@@ -201,7 +201,7 @@ public class TextLineEditEffect extends TextEditEffect {
         Image des = textProperty.getDes();
         if (des == null) return;
         int[] textPosInImg = textProperty.getTextPosInImg();
-        int x = textPosInImg[2 * toIndex];
+        int x = Math.min(textPosInImg[2 * toIndex], textProperty.getEndX()-1);
         int startY = Math.max(textPosInImg[2 * toIndex + 1], textProperty.getStartY());
         int endY = Math.min(startY + (int) Math.ceil(1.1f * fontProperty.getSize()), textProperty.getEndY());
         ImageRaster desRaster = ImageRaster.create(des);

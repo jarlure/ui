@@ -4,9 +4,9 @@ import com.jarlure.ui.component.UIComponent;
 import com.jarlure.ui.converter.SelectConverter;
 import com.jarlure.ui.effect.SwitchEffect;
 import com.jarlure.ui.input.MouseEvent;
-import com.jarlure.ui.input.MouseInputListener;
+import com.jarlure.ui.input.MouseInputAdapter;
 
-public abstract class ButtonMouseInputListener implements MouseInputListener {
+public abstract class ButtonMouseInputListener extends MouseInputAdapter {
 
     public static final int NULL = -1;
     public static final int NOTHING = 0;

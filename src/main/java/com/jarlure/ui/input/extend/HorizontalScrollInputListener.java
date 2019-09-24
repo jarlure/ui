@@ -4,10 +4,10 @@ import com.jarlure.ui.component.UIComponent;
 import com.jarlure.ui.converter.ScrollConverter;
 import com.jarlure.ui.converter.SelectConverter;
 import com.jarlure.ui.input.MouseEvent;
-import com.jarlure.ui.input.MouseInputListener;
+import com.jarlure.ui.input.MouseInputAdapter;
 import com.jarlure.ui.property.AABB;
 
-public abstract class HorizontalScrollInputListener implements MouseInputListener {
+public abstract class HorizontalScrollInputListener extends MouseInputAdapter {
 
     protected static final int NULL = Integer.MAX_VALUE;
     private UIComponent scrollBar;
