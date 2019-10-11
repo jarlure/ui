@@ -75,6 +75,33 @@ public class OrderEffect {
     }
 
     /**
+     * 获取组件的统一尺寸
+     *
+     * @return 组件的统一尺寸
+     */
+    public DynamicCoord getFixSize() {
+        return fixSize;
+    }
+
+    /**
+     * 获取组件0的中心点位置坐标
+     *
+     * @return 组件0的中心点位置坐标
+     */
+    public DynamicCoord getFixPoint0() {
+        return fixPoint0;
+    }
+
+    /**
+     * 获取组件1的中心点位置坐标
+     *
+     * @return 组件1的中心点位置坐标
+     */
+    public DynamicCoord getFixPoint1() {
+        return fixPoint1;
+    }
+
+    /**
      * 获得组件的统一宽度
      *
      * @return 组件的统一宽度

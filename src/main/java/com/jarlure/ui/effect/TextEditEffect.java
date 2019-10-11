@@ -60,6 +60,7 @@ public abstract class TextEditEffect implements AnimEffect {
     }
 
     @Override
+    @Deprecated
     public boolean isFinished() {
         return false;
     }

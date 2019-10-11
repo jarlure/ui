@@ -25,9 +25,8 @@ public class ColorPropertyListener implements PropertyListener<ColorRGBA> {
 
     protected void setColor(Spatial view, ColorRGBA color) {
         if (view instanceof Geometry) {
-            Material mat = ((Geometry) view).getMaterial().clone();
+            Material mat = ((Geometry) view).getMaterial();
             mat.setColor("Color", color);
-            view.setMaterial(mat);
         } else if (view instanceof Node) {
             for (Spatial child : ((Node) view).getChildren()) {
                 setColor(child, color);

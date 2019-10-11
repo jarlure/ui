@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
-group 'com.gitee.jarlure'
+group 'com.github.jarlure'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8 // java 8

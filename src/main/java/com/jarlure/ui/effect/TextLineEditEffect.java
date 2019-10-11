@@ -2,7 +2,6 @@ package com.jarlure.ui.effect;
 
 import com.jarlure.ui.property.FontProperty;
 import com.jarlure.ui.property.TextProperty;
-import com.jarlure.ui.util.ImageHandler;
 import com.jme3.math.ColorRGBA;
 import com.jme3.texture.Image;
 import com.jme3.texture.image.ImageRaster;

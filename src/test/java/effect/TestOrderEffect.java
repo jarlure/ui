@@ -41,11 +41,14 @@ public class TestOrderEffect extends SimpleApplication {
 
         //设置面板的整齐效果
         AABB panelBox = panel.get(AABB.class);
+        //1.规定面板上组件的尺寸
         DynamicCoord fixSize = new DynamicCoord(panelBox, 10, 10);
-        DynamicCoord position = new DynamicCoord(panelBox, 5, panelBox.getHeight() / 2);
-        DynamicCoord interval = new DynamicCoord(panelBox, 20, panelBox.getHeight() / 2);
+        //2.规定面板上第一个组件的位置
+        DynamicCoord fixPos0 = new DynamicCoord(panelBox, 5, panelBox.getHeight() / 2);
+        //3.规定面板上第二个组件的位置
+        DynamicCoord fixPos1 = new DynamicCoord(panelBox, 20, panelBox.getHeight() / 2);
         ElementProperty elementProperty = panel.get(ElementProperty.class);
-        OrderEffect effect = new OrderEffect(elementProperty, fixSize, position, interval);
+        OrderEffect effect = new OrderEffect(elementProperty, fixSize, fixPos0, fixPos1);
         panel.set(OrderEffect.class, effect);
 
         //创建面板的子组件
