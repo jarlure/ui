@@ -53,4 +53,5 @@ public class TestTranslucentEffect extends SimpleApplication {
         ColorProperty colorProperty = component.get(ColorProperty.class);
         colorProperty.setColor(new ColorRGBA(1,1,1,t));
     }
+
 }
