@@ -20,8 +20,8 @@ public class TextProperty extends CustomProperty implements WithUIComponent {
     protected String text;
     protected Direction align = Direction.LEFT;
     private Image src;
-    public int startX, startY, endX, endY;
-    public Image des;
+    private int startX, startY, endX, endY;
+    private Image des;
     private int[] textPosInImg;
 
     /**
