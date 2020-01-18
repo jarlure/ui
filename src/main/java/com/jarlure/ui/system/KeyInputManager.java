@@ -7,7 +7,7 @@ import com.jme3.input.KeyInput;
 import com.jme3.input.event.KeyInputEvent;
 import com.jme3.util.SafeArrayList;
 
-public class KeyInputManager {
+public final class KeyInputManager {
 
     private boolean isLShiftPressed;
     private boolean isRShiftPressed;

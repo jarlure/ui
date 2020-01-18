@@ -8,7 +8,7 @@ import java.awt.datatransfer.Transferable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ClipboardEditor {
+public final class ClipboardEditor {
 
     private static final Logger LOG = Logger.getLogger(ClipboardEditor.class.getName());
 

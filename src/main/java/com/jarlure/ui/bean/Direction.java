@@ -43,6 +43,14 @@ public enum Direction {
         }
     }
 
+    public static Direction[] fromIndex(int... index){
+        Direction[] result=new Direction[index.length];
+        for (int i=0;i<result.length;i++){
+            result[i]=fromIndex(index[i]);
+        }
+        return result;
+    }
+
     /**
      * 通过键盘键值获取方向
      *
@@ -72,6 +80,14 @@ public enum Direction {
             default:
                 return NULL;
         }
+    }
+
+    public static Direction[] fromKeyCode(int... keyCode){
+        Direction[] result=new Direction[keyCode.length];
+        for (int i=0;i<result.length;i++){
+            result[i]=fromKeyCode(keyCode[i]);
+        }
+        return result;
     }
 
     /**
@@ -145,25 +161,29 @@ public enum Direction {
     }
 
     /**
-     * 从给定序列中找到当前方向，并以当前方向为起始重新排列这个序列。例如：你打算以逆时针方向进行遍历四个方向，并且想从
-     * this方向开始遍历，那么你就应该调用this.sort(8,4,2,6)。虽然这看上去有点匪夷所思，但它十分好用。
-     *
-     * @param indexRecycleArray 给定的方向索引序列
-     * @return  以this方向索引作为开始的方向索引序列。新数组
+     * 从循环列表中找到当前方向的下一个方向
+     * @param dirLoopList   方向列表
+     * @return  当前方向的下一个方向
      */
-    public int[] sort(int... indexRecycleArray) {
-        int indexInArray = -1;
-        for (int i = 0; i < indexRecycleArray.length; i++) {
-            if (index == indexRecycleArray[i]) {
-                indexInArray = i;
-                break;
-            }
+    public Direction next(Direction[] dirLoopList) {
+        for (int i = dirLoopList.length - 2; i >= 0; i--) {
+            if (this == dirLoopList[i]) return dirLoopList[i + 1];
         }
-        if (indexInArray == -1) return null;
-        int[] result = new int[indexRecycleArray.length];
-        System.arraycopy(indexRecycleArray, indexInArray, result, 0, indexRecycleArray.length - indexInArray);
-        System.arraycopy(indexRecycleArray, 0, result, indexRecycleArray.length - indexInArray, indexInArray);
-        return result;
+        if (this == dirLoopList[dirLoopList.length - 1]) return dirLoopList[0];
+        return NULL;
+    }
+
+    /**
+     * 从循环列表中找到当前方向的上一个方向
+     * @param dirLoopList   方向列表
+     * @return  当前方向的上一个方向
+     */
+    public Direction last(Direction[] dirLoopList) {
+        for (int i = 1; i < dirLoopList.length; i++) {
+            if (this == dirLoopList[i]) return dirLoopList[i - 1];
+        }
+        if (this == dirLoopList[0]) return dirLoopList[dirLoopList.length - 1];
+        return NULL;
     }
 
 }

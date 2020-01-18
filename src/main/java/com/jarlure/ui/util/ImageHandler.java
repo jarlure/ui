@@ -1,6 +1,8 @@
 package com.jarlure.ui.util;
 
 import com.jarlure.ui.bean.Direction;
+import com.jarlure.ui.lambda.Function2Int;
+import com.jarlure.ui.lambda.Function2Int1Obj;
 import com.jme3.math.ColorRGBA;
 import com.jme3.texture.Image;
 import com.jme3.texture.image.ColorSpace;
@@ -23,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ImageHandler {
+public final class ImageHandler {
 
     /**
      * 从本地磁盘加载图片
@@ -158,6 +160,40 @@ public class ImageHandler {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 imgRaster.setPixel(x, y, color);
+            }
+        }
+    }
+
+    /**
+     * 根据给定的函数给图片涂色。
+     * @param img   要上色的图片
+     * @param function  回调函数
+     */
+    public static void drawColor(Image img, Function2Int<ColorRGBA> function){
+        int width = img.getWidth();
+        int height = img.getHeight();
+        ImageRaster imgRaster = ImageRaster.create(img);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                imgRaster.setPixel(x, y, function.apply(x,y));
+            }
+        }
+    }
+
+    /**
+     * 根据给定的函数给图片涂色。每次涂色前会将当前该点像素值作为参数传入函数中
+     * @param img   要上色的图片
+     * @param function  回调函数
+     */
+    public static void drawColor(Image img, Function2Int1Obj<ColorRGBA,ColorRGBA> function){
+        int width = img.getWidth();
+        int height = img.getHeight();
+        ImageRaster imgRaster = ImageRaster.create(img);
+        ColorRGBA color=new ColorRGBA();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                imgRaster.getPixel(x,y,color);
+                imgRaster.setPixel(x, y, function.apply(x,y,color));
             }
         }
     }

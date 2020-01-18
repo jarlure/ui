@@ -8,7 +8,7 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.input.RawInputListener;
 import com.jme3.input.event.*;
 
-public class InputManager {
+public final class InputManager {
 
     private static InputState instance;
 
@@ -43,7 +43,7 @@ public class InputManager {
         instance.keyInputManager.remove(listener);
     }
 
-    private static class InputState extends AbstractAppState implements RawInputListener {
+    private final static class InputState extends AbstractAppState implements RawInputListener {
 
         private MouseInputManager mouseInputManager;
         private KeyInputManager keyInputManager;

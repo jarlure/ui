@@ -28,8 +28,7 @@ public class DynamicCoord {
      * @return 相对于包围盒左边的水平坐标x值
      */
     public float getLocalX() {
-        float x = box.getWidth() * this.x;
-        return x;
+        return box.getWidth() * this.x;
     }
 
     /**
@@ -38,8 +37,7 @@ public class DynamicCoord {
      * @return 相对于包围盒底边的垂直坐标y值
      */
     public float getLocalY() {
-        float y = box.getHeight() * this.y;
-        return y;
+        return box.getHeight() * this.y;
     }
 
     /**

@@ -255,7 +255,7 @@ public class NinePatchEffect {
                 "\nfillRight=" + fillRight;
     }
 
-    private static class Helper {
+    private final static class Helper {
 
         private static int getNumberOfScalePixel(boolean[] side) {
             if (side == null) return 0;

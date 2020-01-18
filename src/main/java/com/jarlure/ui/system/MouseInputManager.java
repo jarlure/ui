@@ -8,7 +8,7 @@ import com.jme3.input.event.MouseButtonEvent;
 import com.jme3.input.event.MouseMotionEvent;
 import com.jme3.util.SafeArrayList;
 
-public class MouseInputManager {
+public final class MouseInputManager {
 
     private static final int NULL = -1;
     private int pressedButtonIndex = NULL;

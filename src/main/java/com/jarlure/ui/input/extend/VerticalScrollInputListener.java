@@ -7,12 +7,8 @@ import com.jarlure.ui.input.MouseEvent;
 import com.jarlure.ui.input.MouseInputAdapter;
 import com.jarlure.ui.property.AABB;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public abstract class VerticalScrollInputListener extends MouseInputAdapter {
 
-    private static final Logger LOG = Logger.getLogger(VerticalScrollInputListener.class.getName());
     protected static final int NULL = Integer.MAX_VALUE;
     private UIComponent scrollBar;
     private UIComponent scene;
@@ -74,7 +70,6 @@ public abstract class VerticalScrollInputListener extends MouseInputAdapter {
     }
 
     protected void setObjectYTop(float yTop) {
-        LOG.log(Level.INFO, "yTop:{0}", yTop);
         yTop = scrollBar.get(ScrollConverter.class).getObjectYTop(yTop);
         object.move(0, yTop - object.get(AABB.class).getYTop());
     }

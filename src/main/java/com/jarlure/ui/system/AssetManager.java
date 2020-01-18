@@ -2,9 +2,13 @@ package com.jarlure.ui.system;
 
 import com.jme3.app.Application;
 import com.jme3.asset.AssetKey;
+import com.jme3.audio.AudioData;
+import com.jme3.material.Material;
 import com.jme3.material.MaterialDef;
+import com.jme3.scene.Spatial;
+import com.jme3.texture.Texture;
 
-public class AssetManager {
+public final class AssetManager {
 
     private static com.jme3.asset.AssetManager instance;
 
@@ -22,19 +26,31 @@ public class AssetManager {
     }
 
     public static MaterialDef getGuiMaterialDef() {
-//        MaterialDef matDef = instance.loadAsset(new AssetKey<>("Common/MatDefs/Gui/Gui.j3md"));
-        MaterialDef matDef = instance.loadAsset(new AssetKey<>("MatDefs/Gui.j3md"));
-        return matDef;
+        return instance.loadAsset(new AssetKey<>("MatDefs/Gui.j3md"));
     }
 
     public static MaterialDef getUnshadedMaterialDef() {
-        MaterialDef matDef = instance.loadAsset(new AssetKey<>("Common/MatDefs/Misc/Unshaded.j3md"));
-        return matDef;
+        return instance.loadAsset(new AssetKey<>("Common/MatDefs/Misc/Unshaded.j3md"));
     }
 
-    public static Object loadAsset(String url) {
-        Object data = instance.loadAsset(url);
-        return data;
+    public static Object loadAsset(String name) {
+        return instance.loadAsset(name);
+    }
+
+    public static Texture loadTexture(String name){
+        return instance.loadTexture(name);
+    }
+
+    public Spatial loadModel(String name){
+        return instance.loadModel(name);
+    }
+
+    public Material loadMaterial(String name){
+        return instance.loadMaterial(name);
+    }
+
+    public AudioData loadAudio(String name){
+        return instance.loadAudio(name);
     }
 
 }

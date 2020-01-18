@@ -15,7 +15,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 
-public class UIRenderState extends AbstractAppState {
+public final class UIRenderState extends AbstractAppState {
 
     private Application app;
     private UINode node;
@@ -26,7 +26,7 @@ public class UIRenderState extends AbstractAppState {
      * 该AppState用于替代SimpleApplication的guiNode。在以前的测试版本中，该AppState的作用是不使用画家算法、恢复深度测试
      * 从而解决多个3D图形堆叠在GUI上不正确显示问题。但是这种方案需要用户对所有的平面组件也要设置不同的深度值以保证不会出
      * 现z-fighting问题。当前版本该AppState已经与guiNode一模一样，不再使用深度测试。不过如果你需要3D图像正确显示在GUI上，
-     * 可以使用UIRenderState(new UINode("UI Node"))重新恢复到以前的测试版本。
+     * 可以使用UIRenderState(new UINode("UI Node"))重新恢复使用深度测试。
      */
     public UIRenderState() {
         node = new UINode("UI Node");
