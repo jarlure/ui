@@ -1,8 +1,6 @@
 package com.jarlure.ui.util;
 
 import com.jarlure.ui.bean.Direction;
-import com.jarlure.ui.lambda.Function2Int;
-import com.jarlure.ui.lambda.Function2Int1Obj;
 import com.jme3.math.ColorRGBA;
 import com.jme3.texture.Image;
 import com.jme3.texture.image.ColorSpace;
@@ -31,7 +29,7 @@ public final class ImageHandler {
      * 从本地磁盘加载图片
      *
      * @param path 图片路径。相对路径从src开始，例如：src/main/java/resources/图片.png；绝对路径从磁盘开始，例如：
-     *             D:/IdeaProjects/project/src/main/java/resources/图片.png
+     *             D:/IdeaProjects/项目名/src/main/java/resources/图片.png
      * @return 图片数据
      */
     public static Image loadImage(String path) {
@@ -43,7 +41,7 @@ public final class ImageHandler {
      *
      * @param img  要保存的图片
      * @param path 图片路径。相对路径从src开始，例如：src/main/java/resources/图片.png；绝对路径从磁盘开始，例如：
-     *             D:/IdeaProjects/project/src/main/java/resources/图片.png
+     *             D:/IdeaProjects/项目名/src/main/java/resources/图片.png
      */
     public static void saveImage(Image img, String path) {
         MethodForPC.saveImage(img, path);
@@ -160,40 +158,6 @@ public final class ImageHandler {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 imgRaster.setPixel(x, y, color);
-            }
-        }
-    }
-
-    /**
-     * 根据给定的函数给图片涂色。
-     * @param img   要上色的图片
-     * @param function  回调函数
-     */
-    public static void drawColor(Image img, Function2Int<ColorRGBA> function){
-        int width = img.getWidth();
-        int height = img.getHeight();
-        ImageRaster imgRaster = ImageRaster.create(img);
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                imgRaster.setPixel(x, y, function.apply(x,y));
-            }
-        }
-    }
-
-    /**
-     * 根据给定的函数给图片涂色。每次涂色前会将当前该点像素值作为参数传入函数中
-     * @param img   要上色的图片
-     * @param function  回调函数
-     */
-    public static void drawColor(Image img, Function2Int1Obj<ColorRGBA,ColorRGBA> function){
-        int width = img.getWidth();
-        int height = img.getHeight();
-        ImageRaster imgRaster = ImageRaster.create(img);
-        ColorRGBA color=new ColorRGBA();
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                imgRaster.getPixel(x,y,color);
-                imgRaster.setPixel(x, y, function.apply(x,y,color));
             }
         }
     }
@@ -458,7 +422,7 @@ public final class ImageHandler {
         return src;
     }
 
-    private static class MethodForPC {
+    private static final class MethodForPC {
 
         private static Image loadImage(String path) {
             if (path == null) return null;
@@ -640,17 +604,6 @@ public final class ImageHandler {
             }
         }
 
-        @Deprecated
-        private static boolean isVerticalTransparent(BufferedImage bimg, int x) {
-            ColorModel colorModel = bimg.getColorModel();
-            WritableRaster raster = bimg.getRaster();
-            for (int y = bimg.getHeight() - 1; y >= 0; y--) {
-                int alpha = colorModel.getAlpha(raster.getDataElements(x, y, null));
-                if (alpha != 0) return false;
-            }
-            return true;
-        }
-
         private static void drawFont(ImageRaster img, int startX, int startY, int imgEndX, int imgEndY, BufferedImage bimg, int bimgStartX, int bimgEndX) {
             ColorRGBA color = new ColorRGBA();
             ColorRGBA A = new ColorRGBA();
@@ -681,11 +634,11 @@ public final class ImageHandler {
 
     }
 
-    private static class MethodForAndroid {
+    private static final class MethodForAndroid {
 
     }
 
-    public static class CompressionMethod {
+    private static final class CompressionMethod {
 
         public enum Compression {
             NULL(-1),
@@ -718,6 +671,7 @@ public final class ImageHandler {
             public int getIndex() {
                 return index;
             }
+
         }
 
         public static int[][] decompress(ByteBuffer buffer, int height, int width) {
@@ -946,7 +900,7 @@ public final class ImageHandler {
 
     }
 
-    private static class NinePatchHelper {
+    private static final class NinePatchHelper {
 
         private static boolean[] readVerticalPixel(int x, ImageRaster raster, ColorRGBA store) {
             boolean[] result = new boolean[raster.getHeight()];
