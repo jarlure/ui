@@ -23,10 +23,8 @@ public class OrderEffect {
         public void propertyAdded(int index, UIComponent component) {
             AABB box = component.get(AABB.class);
             if (fixSize != null) {
-                float orderWidth = getOrderWidth();
-                float orderHeight = getOrderHeight();
-                box.setWidth(orderWidth);
-                box.setHeight(orderHeight);
+                float scale=Math.min(getOrderWidth()/box.getWidth(),getOrderHeight()/box.getHeight());
+                component.scale(scale);
             }
             if (fixPoint0 != null && fixPoint1 != null) {
                 float firstLocationX, firstLocationY;
@@ -61,7 +59,7 @@ public class OrderEffect {
      * 整齐效果。该效果会使组件元素拥有统一的尺寸和间距，并设置以索引值作为参数代入直线方程中得到的位置。
      *
      * @param componentListProperty 组件元素
-     * @param fixSize               组件的统一尺寸。可以为null表示不统一尺寸
+     * @param fixSize               组件等比例缩放后的尺寸
      * @param fixPoint0             组件0的中心点位置坐标
      * @param fixPoint1             组件1的中心点位置坐标
      */
