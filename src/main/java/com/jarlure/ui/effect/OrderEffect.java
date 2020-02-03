@@ -26,28 +26,12 @@ public class OrderEffect {
                 float scale=Math.min(getOrderWidth()/box.getWidth(),getOrderHeight()/box.getHeight());
                 component.scale(scale);
             }
-            if (fixPoint0 != null && fixPoint1 != null) {
-                float firstLocationX, firstLocationY;
-                if (index < startIndex) {
-                    LOG.log(Level.WARNING, "组件{0}的索引值index:{1}小于初始索引startIndex:{2}，无法确定该组件的位置", new Object[]{component, index, startIndex});
-                    return;
-                } else if (index == startIndex) {
-                    firstLocationX = fixPoint0.getWorldX();
-                    firstLocationY = fixPoint0.getWorldY();
-                } else {
-                    UIComponent firstComponent = componentListProperty.get(startIndex);
-                    AABB firstBox = firstComponent.get(AABB.class);
-                    firstLocationX = firstBox.getXCenter();
-                    firstLocationY = firstBox.getYCenter();
-                }
-                float dx = getOrderPositionX(index, firstLocationX) - box.getXCenter();
-                float dy = getOrderPositionY(index, firstLocationY) - box.getYCenter();
-                component.move(dx, dy);
-            }
+            orderPosition(index,component);
         }
 
         @Override
-        protected void foldAnonymousInnerClassCode(ListPropertyAdapter instance) {
+        public void propertyChanged(int index, UIComponent oldValue, UIComponent newValue) {
+            orderPosition(index,newValue);
         }
     };
 
@@ -104,7 +88,7 @@ public class OrderEffect {
      *
      * @return 组件的统一宽度
      */
-    protected float getOrderWidth() {
+    public float getOrderWidth() {
         return fixSize.getLocalX();
     }
 
@@ -113,8 +97,36 @@ public class OrderEffect {
      *
      * @return 组件的统一高度
      */
-    protected float getOrderHeight() {
+    public float getOrderHeight() {
         return fixSize.getLocalY();
+    }
+
+    /**
+     * 计算并设置组件整齐化后的位置
+     *
+     * @param index     组件的索引值
+     * @param component 组件
+     */
+    public void orderPosition(int index, UIComponent component){
+        AABB box = component.get(AABB.class);
+        if (fixPoint0 != null && fixPoint1 != null) {
+            float firstLocationX, firstLocationY;
+            if (index < startIndex) {
+                LOG.log(Level.WARNING, "组件{0}的索引值index:{1}小于初始索引startIndex:{2}，无法确定该组件的位置", new Object[]{component, index, startIndex});
+                return;
+            } else if (index == startIndex) {
+                firstLocationX = fixPoint0.getWorldX();
+                firstLocationY = fixPoint0.getWorldY();
+            } else {
+                UIComponent firstComponent = componentListProperty.get(startIndex);
+                AABB firstBox = firstComponent.get(AABB.class);
+                firstLocationX = firstBox.getXCenter();
+                firstLocationY = firstBox.getYCenter();
+            }
+            float dx = getOrderPositionX(index, firstLocationX) - box.getXCenter();
+            float dy = getOrderPositionY(index, firstLocationY) - box.getYCenter();
+            component.move(dx, dy);
+        }
     }
 
     /**
@@ -124,7 +136,7 @@ public class OrderEffect {
      * @param currentFixPoint0 组件0的中心点位置水平坐标x值
      * @return 位置水平坐标x值
      */
-    protected float getOrderPositionX(int index, float currentFixPoint0) {
+    public float getOrderPositionX(int index, float currentFixPoint0) {
         float fix0 = fixPoint0.getWorldX();
         float fix1 = fixPoint1.getWorldX();
         float fixN = currentFixPoint0 + (index - startIndex) * (fix1 - fix0);
@@ -138,7 +150,7 @@ public class OrderEffect {
      * @param currentFixPoint0 组件0的中心点位置垂直坐标y值
      * @return 位置垂直坐标y值
      */
-    protected float getOrderPositionY(int index, float currentFixPoint0) {
+    public float getOrderPositionY(int index, float currentFixPoint0) {
         float fix0 = fixPoint0.getWorldY();
         float fix1 = fixPoint1.getWorldY();
         float fixN = currentFixPoint0 + (index - startIndex) * (fix1 - fix0);
