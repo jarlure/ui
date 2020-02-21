@@ -7,7 +7,7 @@
         maven { url "https://jitpack.io" }
    }
    dependencies {
-         compile 'com.github.jarlure:ui:1.0.4'
+         implementation 'com.github.jarlure:ui:2.0.0'
    }
    ``` 
 
