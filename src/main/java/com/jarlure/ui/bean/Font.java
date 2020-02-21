@@ -25,7 +25,7 @@ public class Font {
     }
 
     /**
-     * 获取字体名称。例如：黑体、宋体、楷体、腾祥嘉丽中简黑
+     * 获取字体名称。例如：黑体
      *
      * @return 字体名称
      */
@@ -34,7 +34,8 @@ public class Font {
     }
 
     /**
-     * 设置字体名称。在PC上这里的字体名称将会设置进java.awt.Font中。
+     * 设置字体名称。在PC平台这里的字体名称将会设置进java.awt.Font中。Android平台这里的字体名称是一个相对asset文件夹的
+     * 字体存放路径，例如：(src/main/assets/)Fonts/黑体.ttf
      *
      * @param name 字体名称。一般是操作系统Font库里后缀为.ttf的字体名。不含后缀名。
      * @return this
@@ -114,7 +115,7 @@ public class Font {
     }
 
     /**
-     * 设置字体描边边线宽度。单位是像素
+     * 设置字体描边边线宽度。单位是像素。目前不支持Android
      *
      * @param outlineWidth 字体描边边线宽度
      * @return this
@@ -134,7 +135,7 @@ public class Font {
     }
 
     /**
-     * 设置字体描边边线颜色
+     * 设置字体描边边线颜色。目前不支持Android
      *
      * @param outlineColor 描边边线颜色
      * @return this

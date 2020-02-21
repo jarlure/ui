@@ -17,9 +17,11 @@ repositories {
 
 def jme3 = [v:'3.1.0-stable', g:'org.jmonkeyengine']
 dependencies {
-    implementation "${jme3.g}:jme3-core:${jme3.v}"
-//    implementation "${jme3.g}:jme3-lwjgl:${jme3.v}"
-//    implementation "${jme3.g}:jme3-desktop:${jme3.v}"
+    compileOnly "${jme3.g}:jme3-core:${jme3.v}"
+    testRuntimeOnly "${jme3.g}:jme3-lwjgl:${jme3.v}"
+    compileOnly "${jme3.g}:jme3-desktop:${jme3.v}"
+    compileOnly "${jme3.g}:jme3-android:${jme3.v}"
+    compileOnly 'com.google.android:android:4.1.1.4'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
