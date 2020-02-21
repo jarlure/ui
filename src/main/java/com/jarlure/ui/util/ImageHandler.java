@@ -387,15 +387,14 @@ public final class ImageHandler {
      * @return null如果img不是点九图；否则返回去除点九图特有边缘的图片
      */
     public static Image cutNinePatchImage(Image imgDot9, boolean[][] edgeInfoStore) {
-        ColorRGBA store = new ColorRGBA();
         if (edgeInfoStore == null) edgeInfoStore = new boolean[4][];
-        edgeInfoStore[0] = NinePatchHelper.readHorizontalPixel(imgDot9.getHeight() - 1, imgDot9, store);
-        edgeInfoStore[1] = NinePatchHelper.readHorizontalPixel(0, imgDot9, store);
-        edgeInfoStore[2] = NinePatchHelper.readVerticalPixel(0, imgDot9, store);
-        edgeInfoStore[3] = NinePatchHelper.readVerticalPixel(imgDot9.getWidth() - 1, imgDot9, store);
+        edgeInfoStore[0] = NinePatchHelper.readHorizontalPixel(imgDot9.getHeight() - 1, imgDot9);
+        edgeInfoStore[1] = NinePatchHelper.readHorizontalPixel(0, imgDot9);
+        edgeInfoStore[2] = NinePatchHelper.readVerticalPixel(0, imgDot9);
+        edgeInfoStore[3] = NinePatchHelper.readVerticalPixel(imgDot9.getWidth() - 1, imgDot9);
         if (!NinePatchHelper.isNinePatchImage(edgeInfoStore)) return null;
 
-        Image src = NinePatchHelper.cutEdge(imgDot9, edgeInfoStore[0], edgeInfoStore[1], edgeInfoStore[2], edgeInfoStore[3], store);
+        Image src = NinePatchHelper.cutEdge(imgDot9, edgeInfoStore[0], edgeInfoStore[1], edgeInfoStore[2], edgeInfoStore[3]);
         edgeInfoStore[0] = NinePatchHelper.resize(edgeInfoStore[0], edgeInfoStore[2], edgeInfoStore[3]);
         edgeInfoStore[1] = NinePatchHelper.resize(edgeInfoStore[1], edgeInfoStore[2], edgeInfoStore[3]);
         edgeInfoStore[2] = NinePatchHelper.resize(edgeInfoStore[2], edgeInfoStore[1], edgeInfoStore[0]);
@@ -884,7 +883,7 @@ public final class ImageHandler {
 
     private static class NinePatchHelper {
 
-        private static boolean[] readVerticalPixel(int x, Image dot9Img, ColorRGBA store) {
+        private static boolean[] readVerticalPixel(int x, Image dot9Img) {
             boolean[] result = new boolean[dot9Img.getHeight()];
             ByteBuffer data = dot9Img.getData(0);
             int line=4*dot9Img.getWidth();
@@ -897,15 +896,15 @@ public final class ImageHandler {
                 g=data.get();
                 b=data.get();
                 a=data.get();
-                if (store.a == 0) continue;
-                if (r==-1 && g==-1 && b==-1 && a==-1) result[y] = true;//ColorRGBA.Black
+                if (a == 0) continue;
+                if (r==0 && g==0 && b==0 && a==-1) result[y] = true;//ColorRGBA.Black
                 else return null;
             }
             if (isNinePatchSide(result)) return result;
             return null;
         }
 
-        private static boolean[] readHorizontalPixel(int y, Image dot9Img, ColorRGBA store) {
+        private static boolean[] readHorizontalPixel(int y, Image dot9Img) {
             boolean[] result = new boolean[dot9Img.getWidth()];
             ByteBuffer data = dot9Img.getData(0);
             data.position(y*4*dot9Img.getWidth());
@@ -915,8 +914,8 @@ public final class ImageHandler {
                 g=data.get();
                 b=data.get();
                 a=data.get();
-                if (store.a == 0) continue;
-                if (r==-1 && g==-1 && b==-1 && a==-1) result[y] = true;//ColorRGBA.Black
+                if (a == 0) continue;
+                if (r==0 && g==0 && b==0 && a==-1) result[x] = true;//ColorRGBA.Black
                 else return null;
             }
             if (isNinePatchSide(result)) return result;
@@ -939,7 +938,7 @@ public final class ImageHandler {
             return false;
         }
 
-        private static Image cutEdge(Image img, boolean[] topSide, boolean[] bottomSide, boolean[] leftSide, boolean[] rightSide, ColorRGBA store) {
+        private static Image cutEdge(Image img, boolean[] topSide, boolean[] bottomSide, boolean[] leftSide, boolean[] rightSide) {
             int startX = 0;
             int startY = 0;
             int endX = img.getWidth();
