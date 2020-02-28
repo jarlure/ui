@@ -3,7 +3,6 @@ package com.jarlure.ui.system;
 import com.jarlure.ui.input.LineTouchEvent;
 import com.jarlure.ui.input.PointTouchEvent;
 import com.jarlure.ui.input.TouchInputListener;
-import com.jme3.app.Application;
 import com.jme3.input.event.TouchEvent;
 import com.jme3.util.SafeArrayList;
 
@@ -17,7 +16,7 @@ public final class TouchInputManager {
     private long[] timeWhenPress = new long[]{NULL,NULL,NULL,NULL,NULL};
     private long[] timeWhenClick = new long[]{NULL,NULL,NULL,NULL,NULL};
     private float p0_x, p0_y, p1_x, p1_y;
-    private SafeArrayList<TouchInputListener> queue;
+    private SafeArrayList<TouchInputListener> queue=new SafeArrayList<>(TouchInputListener.class);
 
     public void add(TouchInputListener listener){
         if (queue == null) return;
@@ -148,17 +147,6 @@ public final class TouchInputManager {
             pressY[id]=NULL;
             timeWhenPress[id] = NULL;
         }
-    }
-
-    public void initialize(Application app) {
-        queue=new SafeArrayList<>(TouchInputListener.class);
-    }
-
-    public void cleanup() {
-        queue=null;
-    }
-
-    public void update(float tpf) {
     }
 
 }

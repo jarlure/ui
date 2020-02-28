@@ -4,32 +4,32 @@ public interface TouchInputListener {
 
     /**
      * 第n个触点的按下事件。当手指按压触摸屏时，触发该事件。
-     * @param finger    第n个触点的触点事件（n<=5）
+     * @param finger    第n个触点的触点事件（n小于等于5）
      */
     void onPointPress(PointTouchEvent finger);
 
     /**
      * 第n个触点的拖拽事件。当手指在触摸屏上滑动时，多次触发该事件。
-     * @param finger    第n个触点的触点事件（n<=5）
+     * @param finger    第n个触点的触点事件（n小于等于5）
      */
     void onPointDragging(PointTouchEvent finger);
 
     /**
      * 第n个触点的释放事件。当手指离开触摸屏时，触发该事件。
-     * @param finger    第n个触点的触点事件（n<=5）
+     * @param finger    第n个触点的触点事件（n小于等于5）
      */
     void onPointRelease(PointTouchEvent finger);
 
     /**
      * 第n个触点的点击事件。当手指在0.15s内按下并离开触摸屏时，触发该事件。
-     * @param finger    第n个触点的触点事件（n<=5）
+     * @param finger    第n个触点的触点事件（n小于等于5）
      */
     void onPointClick(PointTouchEvent finger);
 
     /**
      * 第n个触点的双击事件。当触发了点击事件后的触点在0.2s内再次触发点击事件后，触发该事件。
      * 注意：该事件在触发前，会触发总共两次onPointClick()
-     * @param finger    第n个触点的触点事件（n<=5）
+     * @param finger    第n个触点的触点事件（n小于等于5）
      */
     void onPointDoubleClick(PointTouchEvent finger);
 

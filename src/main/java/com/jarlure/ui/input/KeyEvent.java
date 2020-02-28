@@ -135,14 +135,12 @@ public class KeyEvent {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder(112);
-        result.append("code=").append(code).append('；');
-        result.append("value=").append(value).append('；');
-        result.append("isShiftPressed(").append(isLShiftPressed).append(',').append(isRShiftPressed).append(")；");
-        result.append("isCtrlPressed(").append(isLCtrlPressed).append(',').append(isRCtrlPressed).append(")；");
-        result.append("isAltPressed(").append(isLAltPressed).append(',').append(isRAltPressed).append(")；");
-        result.append("consumed=").append(consumed);
-        return result.toString();
+        return "KeyEvent[code=" + code + '；' +
+                "value=" + value + '；' +
+                "isShiftPressed(" + isLShiftPressed + ',' + isRShiftPressed + ")；" +
+                "isCtrlPressed(" + isLCtrlPressed + ',' + isRCtrlPressed + ")；" +
+                "isAltPressed(" + isLAltPressed + ',' + isRAltPressed + ")；" +
+                "consumed=" + consumed+"]";
     }
 
 }

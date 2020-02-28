@@ -93,4 +93,14 @@ public class PointTouchEvent {
         consumed = false;
     }
 
+    @Override
+    public String toString() {
+        return "PointTouchEvent[pointerId=" + pointerId + "；" +
+                "start(" + startX + ',' + startY + ")；" +
+                "current(" + x + ',' + y + ")；" +
+                "delta(" + dx + ',' + dy + ")；" +
+                "pressure=" + pressure + "；" +
+                "numberOfPointer=" + numberOfPointer + "；" +
+                "consumed=" + consumed+"]";
+    }
 }

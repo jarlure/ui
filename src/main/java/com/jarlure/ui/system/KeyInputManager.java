@@ -2,7 +2,6 @@ package com.jarlure.ui.system;
 
 import com.jarlure.ui.input.KeyEvent;
 import com.jarlure.ui.input.KeyInputListener;
-import com.jme3.app.Application;
 import com.jme3.input.KeyInput;
 import com.jme3.input.event.KeyInputEvent;
 import com.jme3.util.SafeArrayList;
@@ -15,7 +14,7 @@ public final class KeyInputManager {
     private boolean isRCtrlPressed;
     private boolean isLAltPressed;
     private boolean isRAltPressed;
-    private SafeArrayList<KeyInputListener> queue;
+    private SafeArrayList<KeyInputListener> queue = new SafeArrayList<>(KeyInputListener.class);
 
     public void add(KeyInputListener listener) {
         if (queue == null) queue = new SafeArrayList<>(KeyInputListener.class);
@@ -67,16 +66,6 @@ public final class KeyInputManager {
                 listener.onKeyReleased(key);
             }
         }
-    }
-
-    public void initialize(Application app) {
-        queue = new SafeArrayList<>(KeyInputListener.class);
-    }
-
-    public void cleanup() {
-    }
-
-    public void update(float tpf) {
     }
 
 }

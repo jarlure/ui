@@ -100,4 +100,16 @@ public class LineTouchEvent {
         consumed = false;
     }
 
+    @Override
+    public String toString() {
+        return "LineTouchEvent[pointerId=" + pointerId + "；" +
+                "start0(" + startX0 + ',' + startY0 + ")；" +
+                "current0(" + x0 + ',' + y0 + ")；" +
+                "start1(" + startX1 + ',' + startY1 + ")；" +
+                "current1(" + x1 + ',' + y1 + ")；" +
+                "delta(" + dx + ',' + dy + ")；" +
+                "numberOfPointer=" + numberOfPointer + "；" +
+                "consumed=" + consumed+"]";
+    }
+
 }

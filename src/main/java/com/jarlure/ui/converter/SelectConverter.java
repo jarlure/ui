@@ -2,6 +2,7 @@ package com.jarlure.ui.converter;
 
 import com.jarlure.ui.component.UIComponent;
 import com.jarlure.ui.input.MouseEvent;
+import com.jarlure.ui.input.PointTouchEvent;
 import com.jarlure.ui.property.*;
 import com.jme3.material.MatParam;
 import com.jme3.material.Material;
@@ -38,14 +39,7 @@ public class SelectConverter implements WithUIComponent {
      * @return 未被选中、这个组件不可见或是被其他组件覆盖时返回false；否则返回true
      */
     public boolean isSelect(UIComponent component, MouseEvent mouse) {
-        checkAndUpdateSelected(mouse);
-        if (component == null) return false;
-        if (component.equals(selected)) return true;
-        if (parentList.isEmpty()) return false;
-        for (UIComponent parent : parentList) {
-            if (component.equals(parent)) return true;
-        }
-        return false;
+        return isSelect(component,mouse.hashCode(),mouse.x,mouse.y);
     }
 
     /**
@@ -56,7 +50,80 @@ public class SelectConverter implements WithUIComponent {
      * @return 如果被选中的组件当中有叫作给定组件名的，返回true；否则返回false
      */
     public boolean isSelect(String name, MouseEvent mouse) {
-        checkAndUpdateSelected(mouse);
+        return isSelect(name, mouse.hashCode(), mouse.x, mouse.y);
+    }
+
+    /**
+     * 判断给定组件是否被鼠标选中。
+     *
+     * @param component 给定的组件
+     * @param touchPoint 触点
+     * @return 未被选中、这个组件不可见或是被其他组件覆盖时返回false；否则返回true
+     */
+    public boolean isSelect(UIComponent component, PointTouchEvent touchPoint) {
+        return isSelect(component,touchPoint.hashCode(),touchPoint.x,touchPoint.y);
+    }
+
+
+    /**
+     * 判断被触点选中的组件当中是否有名为给定组件名的组件。
+     *
+     * @param name  给定组件名
+     * @param touchPoint 触点
+     * @return 如果被选中的组件当中有叫作给定组件名的，返回true；否则返回false
+     */
+    public boolean isSelect(String name, PointTouchEvent touchPoint) {
+        return isSelect(name,touchPoint.hashCode(),touchPoint.x,touchPoint.y);
+    }
+
+    /**
+     * 判断给定组件是否被鼠标选中。
+     *
+     * @param component 给定的组件
+     * @param hashcode 事件的哈希码
+     * @param x        拣选点水平位置坐标x
+     * @param y        拣选点垂直位置坐标y
+     * @return 未被选中、这个组件不可见或是被其他组件覆盖时返回false；否则返回true
+     */
+    public boolean isSelect(UIComponent component, int hashcode, float x, float y) {
+        //更新拣选结果
+        if (validMark != hashcode) {
+            validMark = hashcode;
+            UIComponent lastSelected = selected;
+            if (lastSelected == rootNode) lastSelected = null;
+            lastSelected = checkRange(lastSelected, x, y);
+            selected = findSelected(rootNode, x, y, lastSelected);
+            if (lastSelected == null || !lastSelected.equals(selected)) updateParentSelectedList();
+        }
+        if (selected == null) return false;
+        if (component == null) return false;
+        if (component.equals(selected)) return true;
+        if (parentList.isEmpty()) return false;
+        for (UIComponent parent : parentList) {
+            if (component.equals(parent)) return true;
+        }
+        return false;
+    }
+
+    /**
+     * 更新并判断给定拣选点是否选中了给定组件。
+     *
+     * @param name     给定组件名
+     * @param hashcode 事件的哈希码
+     * @param x        拣选点水平位置坐标x
+     * @param y        拣选点垂直位置坐标y
+     * @return 如果被选中的组件当中有叫作给定组件名的，返回true；否则返回false
+     */
+    public boolean isSelect(String name, int hashcode, float x, float y) {
+        //更新拣选结果
+        if (validMark != hashcode) {
+            validMark = hashcode;
+            UIComponent lastSelected = selected;
+            if (lastSelected == rootNode) lastSelected = null;
+            lastSelected = checkRange(lastSelected, x, y);
+            selected = findSelected(rootNode, x, y, lastSelected);
+            if (lastSelected == null || !lastSelected.equals(selected)) updateParentSelectedList();
+        }
         if (selected == null) return false;
         if (name.equals(selected.get(UIComponent.NAME))) return true;
         if (parentList.isEmpty()) return false;
@@ -67,21 +134,6 @@ public class SelectConverter implements WithUIComponent {
     }
 
     /**
-     * 检查给定的鼠标事件是否是新的鼠标事件。是则重新计算鼠标选中，并记录到缓存中。
-     *
-     * @param mouse 给定的鼠标事件
-     */
-    protected void checkAndUpdateSelected(MouseEvent mouse) {
-        if (validMark == mouse.hashCode()) return;
-        validMark = mouse.hashCode();
-        UIComponent lastSelected = selected;
-        if (lastSelected == rootNode) lastSelected = null;
-        lastSelected = checkRange(lastSelected, mouse.x, mouse.y);
-        selected = findSelected(rootNode, mouse.x, mouse.y, lastSelected);
-        if (lastSelected == null || !lastSelected.equals(selected)) updateParentSelectedList();
-    }
-
-    /**
      * 检查上次被选中的组件是否仍然被选中。
      *
      * @param selected 上次被选中的组件
@@ -89,7 +141,7 @@ public class SelectConverter implements WithUIComponent {
      * @param y        当前鼠标的垂直坐标y值
      * @return null如果鼠标位置不在被选中的组件范围内；否则返回被选中的组件
      */
-    private UIComponent checkRange(UIComponent selected, int x, int y) {
+    private UIComponent checkRange(UIComponent selected, float x, float y) {
         if (selected == null) return null;
         if (!selected.isVisible()) return null;
         if (!selected.get(AABB.class).contains(x, y)) return null;
@@ -120,7 +172,7 @@ public class SelectConverter implements WithUIComponent {
      * @param selected  候选组件
      * @return 如果被检测组件比候选组件更符合条件则返回被检测组件；否则返回候选组件
      */
-    protected UIComponent findSelected(UIComponent component, int x, int y, UIComponent selected) {
+    protected UIComponent findSelected(UIComponent component, float x, float y, UIComponent selected) {
         if (component == null) return selected;
         if (component.equals(selected)) return selected;
         if (!component.isVisible()) return selected;

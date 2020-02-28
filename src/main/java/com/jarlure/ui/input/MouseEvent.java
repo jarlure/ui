@@ -130,14 +130,12 @@ public class MouseEvent {
 
     @Override
     public String toString() {
-        StringBuilder result=new StringBuilder(96);
-        result.append("start(").append(startX).append(',').append(startY).append(")；");
-        result.append("current(").append(x).append(',').append(y).append(")；");
-        result.append("delta(").append(dx).append(',').append(dy).append(',').append(dw).append(")；");
-        result.append("buttonIndex=").append(buttonIndex).append("；");
-        result.append("isPressed=").append(isPressed).append("；");
-        result.append("consumed=").append(consumed);
-        return result.toString();
+        return "MouseEvent[start(" + startX + ',' + startY + ")；" +
+                "current(" + x + ',' + y + ")；" +
+                "delta(" + dx + ',' + dy + ',' + dw + ")；" +
+                "buttonIndex=" + buttonIndex + "；" +
+                "isPressed=" + isPressed + "；" +
+                "consumed=" + consumed+"]";
     }
 
 }

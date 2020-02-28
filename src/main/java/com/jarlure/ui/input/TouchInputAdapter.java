@@ -52,4 +52,7 @@ public class TouchInputAdapter implements TouchInputListener {
 
     }
 
+    protected void foldAnonymousInnerClassCode(TouchInputAdapter instance) {
+    }
+
 }

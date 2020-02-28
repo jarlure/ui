@@ -157,18 +157,52 @@ public final class ImageHandler {
         byte g = toByte(color.g);
         byte b = toByte(color.b);
         byte a = toByte(color.a);
-        byte[] line = new byte[4*img.getWidth()];
-        for (int i=0;i<line.length;){
-            line[i++]=r;
-            line[i++]=g;
-            line[i++]=b;
-            line[i++]=a;
+        byte[] array = new byte[4*img.getWidth()];
+        for (int i=0;i<array.length;){
+            array[i++]=r;
+            array[i++]=g;
+            array[i++]=b;
+            array[i++]=a;
         }
         ByteBuffer data =img.getData(0);
         data.position(0);
         for (int i=0;i<img.getHeight();i++){
-            data.put(line);
+            data.put(array);
         }
+        img.setUpdateNeeded();
+    }
+
+    /**
+     * 给图片上指定区域涂色。该图片上指定区域将被涂成给定的颜色
+     *
+     * @param img    要上色的图片
+     * @param color  要涂的颜色
+     * @param startX 涂色起始位置水平坐标x值（包含）
+     * @param startY 涂色起始位置水平坐标y值（包含）
+     * @param endX   涂色终止位置水平坐标x值（不包含）
+     * @param endY   涂色终止位置水平坐标y值（不包含）
+     */
+    private static void drawColor(Image img,ColorRGBA color,int startX,int startY,int endX,int endY){
+        byte r = toByte(color.r);
+        byte g = toByte(color.g);
+        byte b = toByte(color.b);
+        byte a = toByte(color.a);
+        byte[] array = new byte[4*(endX-startX)];
+        for (int i=0;i<array.length;){
+            array[i++]=r;
+            array[i++]=g;
+            array[i++]=b;
+            array[i++]=a;
+        }
+        int line = 4*img.getWidth();
+        ByteBuffer data =img.getData(0);
+        int pos = startY*line+4*startX;
+        for (int i=startY;i<endY;i++){
+            data.position(pos);
+            data.put(array);
+            pos+=line;
+        }
+        img.setUpdateNeeded();
     }
 
     public static void drawCombine(Image des, int pasteStartX, int pasteStartY, Image src) {
@@ -213,7 +247,7 @@ public final class ImageHandler {
         byte[] desStore=new byte[store.length];
         int i,j;
         byte a;
-        float a1,a2,a3;
+        float a1,a2;
         for (i=0;i<cutHeight;i++){
             srcData.position(srcStartPos+srcOffset);
             srcData.get(store);
@@ -233,16 +267,15 @@ public final class ImageHandler {
                     store[j]=desStore[j];
                 }else{//半透明
                     a1=(a & 0xff)*INV_255;
-                    a2=(desStore[j] & 0xff)*INV_255;
-                    a3=a2*(1-a1);
+                    a2=(1-a1)*(desStore[j] & 0xff)*INV_255;
                     j-=3;
-                    store[j] = (byte) ((store[j] & 0xff) * a1 + (desStore[j] & 0xff) * a3);
+                    store[j] = (byte) ((store[j] & 0xff) * a1 + (desStore[j] & 0xff) * a2);
                     j++;
-                    store[j] = (byte) ((store[j] & 0xff) * a1 + (desStore[j] & 0xff) * a3);
+                    store[j] = (byte) ((store[j] & 0xff) * a1 + (desStore[j] & 0xff) * a2);
                     j++;
-                    store[j] = (byte) ((store[j] & 0xff) * a1 + (desStore[j] & 0xff) * a3);
+                    store[j] = (byte) ((store[j] & 0xff) * a1 + (desStore[j] & 0xff) * a2);
                     j++;
-                    store[j]= (byte) (255*(1-(1-a1)*(1-a2)));
+                    store[j]= (byte) (255 * (a1+a2));
                 }
             }
             desData.position(desStartPos+desOffset);
@@ -250,6 +283,7 @@ public final class ImageHandler {
             srcStartPos+=srcLine;
             desStartPos+=desLine;
         }
+        des.setUpdateNeeded();
     }
 
     /**
@@ -296,6 +330,7 @@ public final class ImageHandler {
             srcStartPos+=srcLine;
             desStartPos+=desLine;
         }
+        des.setUpdateNeeded();
     }
 
     /**
@@ -773,6 +808,7 @@ public final class ImageHandler {
                     positionInImg[i] = startX + (int) position[i];
                     positionInImg[i + 1] = startY;
                 }
+                img.setUpdateNeeded();
                 return positionInImg;
             } else {//多行文本
                 int row = 1;
@@ -831,6 +867,7 @@ public final class ImageHandler {
                     positionInImg[k++] = lineStartX[i] + bimgX[i + 1] - bimgX[i];
                     positionInImg[k++] = lineStartY[i];
                 }
+                img.setUpdateNeeded();
                 return positionInImg;
             }
         }
@@ -843,36 +880,45 @@ public final class ImageHandler {
             int pos = startY * line;
             int offset = 4 * startX;
             int r, g, b, a;
-            byte r0, g0, b0, a0;
-            float a1, a2, a3;
+            byte[] rgba=new byte[4];
+            float a1, a2;
             ByteBuffer data = img.getData(0);
             for (; flipY > bimgEndY; flipY--) {
                 data.position(pos + offset);
                 for (int x = bimgStartX; x < bimgEndX; x++) {
                     int color = bimgRaster.apply(x, flipY);
-                    a = (color >> 24) & 0xFF;
-                    if (a < 13) {//透明
-                        data.position(data.position() + 4);
+                    if (color==0){
+                        data.position(data.position()+4);
                         continue;
                     }
+                    a = (color >> 24) & 0xFF;
                     r = (color >> 16) & 0xFF;
                     g = (color >> 8) & 0xFF;
                     b = (color) & 0xFF;
-                    if (a == 255) {//不透明
-                        data.put((byte) r).put((byte) g).put((byte) b).put((byte) 255);
-                    } else {
-                        r0 = data.get();
-                        g0 = data.get();
-                        b0 = data.get();
-                        a0 = data.get();
-                        a1 = a * INV_255;
-                        a2 = (a0 & 0xff) * INV_255;
-                        a3 = a2 * (1 - a1);
+                    if (a==255){
+                        rgba[0]= (byte) r;
+                        rgba[1]= (byte) g;
+                        rgba[2]= (byte) b;
+                        rgba[3]= (byte) a;
+                        data.put(rgba);
+                    }else{
+                        data.get(rgba);
                         data.position(data.position() - 4);
-                        data.put((byte) (r * a1 + (r0 & 0xff) * a3));
-                        data.put((byte) (g * a1 + (g0 & 0xff) * a3));
-                        data.put((byte) (b * a1 + (b0 & 0xff) * a3));
-                        data.put((byte) (255 * (1 - (1 - a1) * (1 - a2))));
+                        if ((rgba[3]& 0xFF)<13){
+                            rgba[0]= (byte) r;
+                            rgba[1]= (byte) g;
+                            rgba[2]= (byte) b;
+                            rgba[3]= (byte) a;
+                            data.put(rgba);
+                        }else{
+                            a1 = a * INV_255;
+                            a2 = (1 - a1)*(rgba[3] & 0xff) * INV_255;
+                            rgba[0]=(byte) (r * a1 + (rgba[0] & 0xff) * a2);
+                            rgba[1]=(byte) (g * a1 + (rgba[1] & 0xff) * a2);
+                            rgba[2]=(byte) (b * a1 + (rgba[2] & 0xff) * a2);
+                            rgba[3]=(byte) (255 * (a1+a2));
+                            data.put(rgba);
+                        }
                     }
                 }
                 pos+=line;

@@ -2,7 +2,6 @@ package com.jarlure.ui.system;
 
 import com.jarlure.ui.input.MouseEvent;
 import com.jarlure.ui.input.MouseInputListener;
-import com.jme3.app.Application;
 import com.jme3.input.MouseInput;
 import com.jme3.input.event.MouseButtonEvent;
 import com.jme3.input.event.MouseMotionEvent;
@@ -18,7 +17,7 @@ public final class MouseInputManager {
     private float timeLongStay = NULL;
     private int press_x = NULL, press_y = NULL;
     private int move_x = NULL, move_y = NULL;
-    private SafeArrayList<MouseInputListener> queue;
+    private SafeArrayList<MouseInputListener> queue = new SafeArrayList<>(MouseInputListener.class);
 
     public void add(MouseInputListener listener) {
         queue.add(0, listener);
@@ -157,14 +156,6 @@ public final class MouseInputManager {
                 listener.onWheelRolling(mouse);
             }
         }
-    }
-
-    public void initialize(Application app) {
-        queue = new SafeArrayList<>(MouseInputListener.class);
-    }
-
-    public void cleanup() {
-        queue.clear();
     }
 
     public void update(float tpf) {
