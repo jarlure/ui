@@ -9,6 +9,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Image;
+import com.jme3.texture.Texture;
 import com.jme3.texture.Texture2D;
 
 public class Picture extends AbstractComponent {
@@ -60,6 +61,7 @@ public class Picture extends AbstractComponent {
         material.setColor("Color", ColorRGBA.White);
         material.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         Texture2D texture = new Texture2D(img);
+        texture.setMagFilter(Texture.MagFilter.Nearest);
         material.setTexture("Texture", texture);
         view.setMaterial(material);
         view.setLocalScale(width, height, 1);

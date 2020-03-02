@@ -286,6 +286,23 @@ public final class ImageHandler {
         des.setUpdateNeeded();
     }
 
+    public static void drawCut(Image des,Image src){
+        if (des.getWidth()==src.getWidth()&&des.getHeight()==src.getHeight()){
+            byte[] store=new byte[4*des.getWidth()];
+            ByteBuffer desData = des.getData(0);
+            ByteBuffer srcData = src.getData(0);
+            desData.position(0);
+            srcData.position(0);
+            for (int y=0;y<des.getHeight();y++){
+                srcData.get(store);
+                desData.put(store);
+            }
+            des.setUpdateNeeded();
+        }else{
+            drawCut(des,0,0,src,0,0,src.getWidth(),src.getHeight());
+        }
+    }
+
     /**
      * 对另一张图片进行裁剪，然后绘制到这张图片上。
      *

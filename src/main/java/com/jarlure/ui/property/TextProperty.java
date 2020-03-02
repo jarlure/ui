@@ -69,7 +69,7 @@ public class TextProperty extends CustomProperty implements WithUIComponent {
             Image des = this.des;
             {
                 if (des == null) des = ImageHandler.clone(src);
-                else ImageHandler.drawCut(des, 0, 0, src, startX, startY, endX, endY);
+                else ImageHandler.drawCut(des, src);
             }
             FontProperty fontProperty = component.get(FontProperty.class);
             int[] textPosInImg = ImageHandler.drawFont(des, fontProperty.getFont(), text, startX, startY, endX, endY, align);
