@@ -53,6 +53,13 @@ public class SelectConverter implements WithUIComponent {
         return isSelect(name, mouse.hashCode(), mouse.x, mouse.y);
     }
 
+    public boolean isSelect(String[] names,MouseEvent mouse){
+        for (String name:names){
+            if (isSelect(name,mouse))return true;
+        }
+        return false;
+    }
+
     /**
      * 判断给定组件是否被鼠标选中。
      *
@@ -64,7 +71,6 @@ public class SelectConverter implements WithUIComponent {
         return isSelect(component,touchPoint.hashCode(),touchPoint.x,touchPoint.y);
     }
 
-
     /**
      * 判断被触点选中的组件当中是否有名为给定组件名的组件。
      *
@@ -74,6 +80,13 @@ public class SelectConverter implements WithUIComponent {
      */
     public boolean isSelect(String name, PointTouchEvent touchPoint) {
         return isSelect(name,touchPoint.hashCode(),touchPoint.x,touchPoint.y);
+    }
+
+    public boolean isSelect(String[] names,PointTouchEvent touchPoint){
+        for (String name:names){
+            if (isSelect(name,touchPoint))return true;
+        }
+        return false;
     }
 
     /**
@@ -129,6 +142,13 @@ public class SelectConverter implements WithUIComponent {
         if (parentList.isEmpty()) return false;
         for (UIComponent parent : parentList) {
             if (name.equals(parent.get(UIComponent.NAME))) return true;
+        }
+        return false;
+    }
+
+    public boolean isSelect(String[] names, int hashcode, float x, float y) {
+        for (String name:names){
+            if (isSelect(name,hashcode,x,y))return true;
         }
         return false;
     }

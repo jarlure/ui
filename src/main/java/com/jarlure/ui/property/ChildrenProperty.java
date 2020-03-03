@@ -34,6 +34,27 @@ public class ChildrenProperty extends ListProperty<UIComponent> implements WithU
     }
 
     /**
+     * 通过可能的子组件名获取子组件
+     *
+     * @param names 可能的子组件名
+     * @return 名称与给定名称相同的子组件。如果子组件列表中含有多个与给定名称相同的子组件，则返回最先添加的那一个。如果
+     * 没有找到，则返回null
+     */
+    public UIComponent findChildByName(String... names){
+        if (super.value == null) return null;
+        for (UIComponent child : super.value) {
+            for (String name:names){
+                if (name.equals(child.get(UIComponent.NAME))) return child;
+            }
+            if (child.exist(ChildrenProperty.class)) {
+                UIComponent grandChild = child.get(ChildrenProperty.class).findChildByName(names);
+                if (grandChild != null) return grandChild;
+            }
+        }
+        return null;
+    }
+
+    /**
      * 添加子组件
      *
      * @param child 子组件
