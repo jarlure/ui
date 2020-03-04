@@ -98,6 +98,24 @@ public class NinePatchEffect {
     }
 
     /**
+     * 获取图片不失真缩放所能缩小的最小像素宽度
+     *
+     * @return 图片不失真缩放所能缩小的最小像素宽度
+     */
+    public int getMinPixelWidth(){
+        return src.getWidth()-horizontalScalePixel;
+    }
+
+    /**
+     * 获取图片不失真缩放所能缩小的最小像素高度
+     *
+     * @return 图片不失真缩放所能缩小的最小像素高度
+     */
+    public int getMinPixelHeight(){
+        return src.getHeight()-verticalScalePixel;
+    }
+
+    /**
      * 获得拉伸前的图片数据
      *
      * @return 拉伸前的图片数据

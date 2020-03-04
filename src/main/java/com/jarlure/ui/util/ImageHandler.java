@@ -363,17 +363,40 @@ public final class ImageHandler {
      * @param align  文本对齐方式
      * @return 文本中每个字符对应的起始位置坐标
      */
-    public static int[] drawFont(Image img, com.jarlure.ui.bean.Font font, String text, int startX, int startY, int endX, int endY, Direction align) {
+    public static int[] drawText(Image img, com.jarlure.ui.bean.Font font, String text, int startX, int startY, int endX, int endY, Direction align) {
         switch (JmeSystem.getPlatform()) {
             case Windows32:
             case Windows64:
-                return WindowsHelper.drawFont(img,font,text,startX,startY,endX,endY,align);
+                return WindowsHelper.drawText(img,font,text,startX,startY,endX,endY,align);
             case Android_X86:
             case Android_ARM5:
             case Android_ARM6:
             case Android_ARM7:
             case Android_ARM8:
-                return AndroidHelper.drawFont(img,font,text,startX,startY,endX,endY,align);
+                return AndroidHelper.drawText(img,font,text,startX,startY,endX,endY,align);
+            default:
+                throw new UnsupportedOperationException();
+        }
+    }
+
+    /**
+     * 测量文本实际长度
+     *
+     * @param font 字体数据
+     * @param text 文本数据
+     * @return 文本实际长度
+     */
+    public static float measureText(Font font,String text){
+        switch (JmeSystem.getPlatform()) {
+            case Windows32:
+            case Windows64:
+                return WindowsHelper.measureText(font,text);
+            case Android_X86:
+            case Android_ARM5:
+            case Android_ARM6:
+            case Android_ARM7:
+            case Android_ARM8:
+                return AndroidHelper.measureText(font,text);
             default:
                 throw new UnsupportedOperationException();
         }
@@ -527,7 +550,7 @@ public final class ImageHandler {
             }
         }
 
-        private static int[] drawFont(Image img, Font font, String text, int startX, int startY, int endX, int endY, Direction align) {
+        private static int[] drawText(Image img, Font font, String text, int startX, int startY, int endX, int endY, Direction align) {
             java.awt.Font awtFont = new java.awt.Font(font.getName(), font.getStyle(), font.getSize());
             //计算绘制文字需要的最小尺寸
             int bimgHeight = Math.min((int) Math.ceil(1.1f * font.getSize()), endY - startY);
@@ -562,6 +585,17 @@ public final class ImageHandler {
             float[] position = glyphVector.getGlyphPositions(0, glyphVector.getNumGlyphs() + 1, null);
 
             return FontHelper.drawFont(img,text.length(),startX,startY,endX,endY,align,maxRow,bimgWidth,bimgHeight,position, bimg::getRGB);
+        }
+
+        private static float measureText(Font font,String text){
+            if (text==null || text.isEmpty())return 0;
+            java.awt.Font awtFont = new java.awt.Font(font.getName(), font.getStyle(), font.getSize());
+            BufferedImage bimg = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = (Graphics2D) bimg.getGraphics();
+            FontRenderContext fontRenderContext = g.getFontRenderContext();
+            GlyphVector glyphVector = awtFont.createGlyphVector(fontRenderContext, text);
+            float[] position = glyphVector.getGlyphPositions(0, glyphVector.getNumGlyphs() + 1, null);
+            return position[position.length-2]-position[0];
         }
 
     }
@@ -612,7 +646,7 @@ public final class ImageHandler {
             }
         }
 
-        private static int[] drawFont(Image img, Font font, String text, int startX, int startY, int endX, int endY, Direction align) {
+        private static int[] drawText(Image img, Font font, String text, int startX, int startY, int endX, int endY, Direction align) {
             int bimgHeight = Math.min((int) Math.ceil(1.1f * font.getSize()), endY - startY);
             int lineWidth = endX - startX;
             int maxRow = (endY - startY) / bimgHeight;
@@ -652,6 +686,27 @@ public final class ImageHandler {
             }
 
             return FontHelper.drawFont(img,text.length(),startX,startY,endX,endY,align,maxRow,bimgWidth,bimgHeight,position, bimg::getPixel);
+        }
+
+        private static float measureText(Font font,String text){
+            TextPaint textPaint = new TextPaint();
+            //设置抗锯齿
+            textPaint.setAntiAlias(true);
+            //设置字体
+            Typeface typeface;
+            if (null==font.getName() || font.getName().isEmpty()){
+                typeface=Typeface.DEFAULT;
+            }else {
+                typeface = Typeface.createFromAsset(JmeAndroidSystem.getView().getContext().getAssets(), font.getName());
+            }
+            textPaint.setTypeface(typeface);
+            //设置字体尺寸
+            textPaint.setTextSize(font.getSize());
+            //设置字体样式
+            if (font.getStyle()==Typeface.BOLD){
+                textPaint.setFakeBoldText(true);
+            }
+            return textPaint.measureText(text,0,text.length());
         }
 
     }
