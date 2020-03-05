@@ -363,7 +363,7 @@ public final class ImageHandler {
      * @param align  文本对齐方式
      * @return 文本中每个字符对应的起始位置坐标
      */
-    public static int[] drawText(Image img, com.jarlure.ui.bean.Font font, String text, int startX, int startY, int endX, int endY, Direction align) {
+    public static int[] drawText(Image img, Font font, String text, int startX, int startY, int endX, int endY, Direction align) {
         switch (JmeSystem.getPlatform()) {
             case Windows32:
             case Windows64:
