@@ -449,7 +449,7 @@ public final class ImageHandler {
      */
     public static Image cut(Image src, int startX, int startY, int width, int height) {
         Image result = createEmptyImage(width,height);
-        drawCut(result,0,0,src,startX,startY,width,height);
+        drawCut(result,0,0,src,startX,startY,startX+width,startY+height);
         return result;
     }
 
