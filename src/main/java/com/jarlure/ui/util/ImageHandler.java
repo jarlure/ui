@@ -19,9 +19,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -603,7 +601,23 @@ public final class ImageHandler {
     private static class AndroidHelper {
 
         private static Image loadImage(String path) {
-            Bitmap bitmap = BitmapFactory.decodeFile(path);
+            Bitmap bitmap;
+            InputStream stream=null;
+            try {
+                File file = new File(path);
+                if (file.exists()) stream = new FileInputStream(file);
+                else stream = JmeAndroidSystem.getView().getContext().getAssets().open(path);
+                bitmap = BitmapFactory.decodeStream(stream);
+            }catch (IOException e){
+                return null;
+            }finally {
+                if (stream != null) {
+                    try {
+                        stream.close();
+                    } catch (IOException e) {
+                    }
+                }
+            }
             int width = bitmap.getWidth();
             int height = bitmap.getHeight();
             Matrix matrix = new Matrix();
