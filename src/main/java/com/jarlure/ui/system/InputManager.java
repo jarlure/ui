@@ -87,7 +87,7 @@ public class InputManager {
 
         @Override
         public void initialize(AppStateManager stateManager, Application app) {
-
+            mouseInputManager.initialize();
         }
 
         @Override

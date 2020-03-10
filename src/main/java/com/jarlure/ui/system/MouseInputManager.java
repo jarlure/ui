@@ -5,11 +5,14 @@ import com.jarlure.ui.input.MouseInputListener;
 import com.jme3.input.MouseInput;
 import com.jme3.input.event.MouseButtonEvent;
 import com.jme3.input.event.MouseMotionEvent;
+import com.jme3.system.JmeSystem;
 import com.jme3.util.SafeArrayList;
 
 public final class MouseInputManager {
 
     private static final int NULL = -1;
+    private long clickMaxDelay;
+    private long doubleClickMaxDelay;
     private int pressedButtonIndex = NULL;
     private long timeWhenPress = NULL;
     private long timeWhenClick = NULL;
@@ -57,13 +60,13 @@ public final class MouseInputManager {
         //如果之前按下的鼠标按键就是这个键，则执行释放操作
         if (evt.isReleased() && pressedButtonIndex == evt.getButtonIndex()) {
             long dt = evt.getTime() - timeWhenPress;
-            boolean isClicked = dt < 150000000 && press_x == evt.getX() && press_y == evt.getY();
+            boolean isClicked = dt < clickMaxDelay && press_x == evt.getX() && press_y == evt.getY();
             boolean isDoubleClicked = false;
             if (isClicked) {
                 if (timeWhenClick == NULL) timeWhenClick = evt.getTime();
                 else {
                     dt = evt.getTime() - timeWhenClick;
-                    if (dt < 200000000) {
+                    if (dt < doubleClickMaxDelay) {
                         isDoubleClicked = true;
                         timeWhenClick = NULL;
                     } else {
@@ -155,6 +158,26 @@ public final class MouseInputManager {
             for (MouseInputListener listener : queue.getArray()) {
                 listener.onWheelRolling(mouse);
             }
+        }
+    }
+
+    public void initialize(){
+        switch (JmeSystem.getPlatform()) {
+            case Windows32:
+            case Windows64:
+                clickMaxDelay=150000000;
+                doubleClickMaxDelay=200000000;
+                break;
+            case Android_X86:
+            case Android_ARM5:
+            case Android_ARM6:
+            case Android_ARM7:
+            case Android_ARM8:
+                clickMaxDelay=150;
+                doubleClickMaxDelay=200;
+                break;
+            default:
+                throw new UnsupportedOperationException();
         }
     }
 
