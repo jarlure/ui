@@ -503,7 +503,6 @@ public final class ImageHandler {
             Bitmap bitmap;
             InputStream stream=null;
             BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPremultiplied=false;
             try {
                 File file = new File(path);
                 if (file.exists()) stream = new FileInputStream(file);
@@ -613,7 +612,12 @@ public final class ImageHandler {
             Bitmap bitmap;
             InputStream stream=null;
             BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPremultiplied=false;
+            Class clazz = options.getClass();
+            try {
+                clazz.getDeclaredField("inPremultiplied").set(options,false);
+            }catch (NoSuchFieldException|IllegalAccessException e){
+                e.printStackTrace();
+            }
             try {
                 File file = new File(path);
                 if (file.exists()) stream = new FileInputStream(file);
