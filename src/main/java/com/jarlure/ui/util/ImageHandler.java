@@ -499,28 +499,37 @@ public final class ImageHandler {
 
     private static class WindowsHelper {
 
-        private static Image loadImage(String path){
+        private static Image loadImage(String path) {
+            Bitmap bitmap;
+            InputStream stream=null;
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPremultiplied=false;
             try {
-                BufferedImage source = ImageIO.read(new File(path));
-                int height = source.getHeight();
-                int width = source.getWidth();
-                ByteBuffer data = BufferUtils.createByteBuffer(width * height * 4);
-                for (int y = 0; y < height; y++) {
-                    for (int x = 0; x < width; x++) {
-                        int ny = height - y - 1;
-                        int rgb = source.getRGB(x, ny);
-                        byte a = (byte) ((rgb & 0xFF000000) >> 24);
-                        byte r = (byte) ((rgb & 0x00FF0000) >> 16);
-                        byte g = (byte) ((rgb & 0x0000FF00) >> 8);
-                        byte b = (byte) ((rgb & 0x000000FF));
-                        data.put(r).put(g).put(b).put(a);
+                File file = new File(path);
+                if (file.exists()) stream = new FileInputStream(file);
+                else stream = JmeAndroidSystem.getView().getContext().getAssets().open(path);
+                bitmap = BitmapFactory.decodeStream(stream,null,options);
+            }catch (IOException e){
+                return null;
+            }finally {
+                if (stream != null) {
+                    try {
+                        stream.close();
+                    } catch (IOException e) {
                     }
                 }
-                data.flip();
-                return new Image(Image.Format.RGBA8, width, height, data, ColorSpace.Linear);
-            }catch (IOException e) {
-                return null;
             }
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            Matrix matrix = new Matrix();
+            matrix.postScale(1, -1); // 上下翻转
+            bitmap.setHasAlpha(false);//通知Canvas忽略对alpha值的预处理检测
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+
+            Image result = ImageHandler.createEmptyImage(width,height);
+            ByteBuffer data = result.getData(0);
+            bitmap.copyPixelsToBuffer(data);
+            return result;
         }
 
         private static void saveImage(Image img,String path){
@@ -603,11 +612,13 @@ public final class ImageHandler {
         private static Image loadImage(String path) {
             Bitmap bitmap;
             InputStream stream=null;
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPremultiplied=false;
             try {
                 File file = new File(path);
                 if (file.exists()) stream = new FileInputStream(file);
                 else stream = JmeAndroidSystem.getView().getContext().getAssets().open(path);
-                bitmap = BitmapFactory.decodeStream(stream);
+                bitmap = BitmapFactory.decodeStream(stream,null,options);
             }catch (IOException e){
                 return null;
             }finally {
@@ -621,14 +632,14 @@ public final class ImageHandler {
             int width = bitmap.getWidth();
             int height = bitmap.getHeight();
             Matrix matrix = new Matrix();
-            matrix.postScale(1, -1); // 翻转
+            matrix.postScale(1, -1); // 上下翻转
+            bitmap.setHasAlpha(false);//通知Canvas忽略对alpha值的预处理检测
             bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
-            int bufferRows = width*4;
-            int bufferSize = bufferRows*height;
-            ByteBuffer data = BufferUtils.createByteBuffer(bufferSize);
+
+            Image result = ImageHandler.createEmptyImage(width,height);
+            ByteBuffer data = result.getData(0);
             bitmap.copyPixelsToBuffer(data);
-            data.flip();
-            return new Image(Image.Format.RGBA8, width, height, data, ColorSpace.Linear);
+            return result;
         }
 
         private static void saveImage(Image img, String path) {
