@@ -1,6 +1,8 @@
 package com.jarlure.ui.input;
 
-public class PointTouchEvent {
+import com.jme3.input.event.InputEvent;
+
+public class PointTouchEvent extends InputEvent {
 
     private final int pointerId;
     public final float startX, startY;
@@ -8,7 +10,6 @@ public class PointTouchEvent {
     public final float dx, dy;
     private final float pressure;//压力
     private final int numberOfPointer;
-    private boolean consumed;
 
     public PointTouchEvent(int pointerId, float x, float y, float pressure,int numberOfPointer) {
         this.pointerId = pointerId;
@@ -76,14 +77,6 @@ public class PointTouchEvent {
      */
     public int getNumberOfPointer() {
         return numberOfPointer;
-    }
-
-    /**
-     * 设置已有监听器处理该事件标记。注意：触屏输入管理器不会读取该标记。每个监听器需要自己判断是否存在该标记以决定是否
-     * 处理该事件。
-     */
-    public void setConsumed() {
-        consumed = true;
     }
 
     /**

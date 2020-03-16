@@ -1,6 +1,8 @@
 package com.jarlure.ui.input;
 
-public interface JoystickInputListener {
+import com.jme3.input.controls.InputListener;
+
+public interface JoystickInputListener extends InputListener {
 
     /**
      * 当游戏手柄的按钮按下时触发该事件

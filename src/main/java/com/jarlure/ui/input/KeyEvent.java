@@ -1,6 +1,8 @@
 package com.jarlure.ui.input;
 
-public class KeyEvent {
+import com.jme3.input.event.InputEvent;
+
+public class KeyEvent extends InputEvent {
 
     private int code;
     private char value;
@@ -10,7 +12,6 @@ public class KeyEvent {
     private boolean isRCtrlPressed;
     private boolean isLAltPressed;
     private boolean isRAltPressed;
-    private boolean consumed;
 
     public KeyEvent(int code, char value, boolean isLShiftPressed, boolean isRShiftPressed, boolean isLCtrlPressed, boolean isRCtrlPressed, boolean isLAltPressed, boolean isRAltPressed) {
         this.code = code;
@@ -107,23 +108,6 @@ public class KeyEvent {
 
     public boolean isRAltPressed() {
         return isRAltPressed;
-    }
-
-    /**
-     * 判断是否已有监听器处理该事件。
-     *
-     * @return 若有标记则返回true；否则返回false
-     */
-    public boolean isConsumed() {
-        return consumed;
-    }
-
-    /**
-     * 设置已有监听器处理该事件标记。注意：键盘输入管理器不会读取该标记。每个监听器需要自己判断是否存在该标记以决定是否
-     * 处理该事件。
-     */
-    public void setConsumed() {
-        consumed = true;
     }
 
     /**

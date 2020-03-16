@@ -51,17 +51,20 @@ public final class KeyInputManager {
         if (evt.isPressed()) {
             if (evt.isRepeating()) {
                 KeyEvent key = new KeyEvent(evt.getKeyCode(), evt.getKeyChar(), isLShiftPressed, isRShiftPressed, isLCtrlPressed, isRCtrlPressed, isLAltPressed, isRAltPressed);
+                key.setTime(evt.getTime());
                 for (KeyInputListener listener : queue.getArray()) {
                     listener.onKeyPressing(key);
                 }
             } else {
                 KeyEvent key = new KeyEvent(evt.getKeyCode(), evt.getKeyChar(), isLShiftPressed, isRShiftPressed, isLCtrlPressed, isRCtrlPressed, isLAltPressed, isRAltPressed);
+                key.setTime(evt.getTime());
                 for (KeyInputListener listener : queue.getArray()) {
                     listener.onKeyPressed(key);
                 }
             }
         } else {
             KeyEvent key = new KeyEvent(evt.getKeyCode(), evt.getKeyChar(), isLShiftPressed, isRShiftPressed, isLCtrlPressed, isRCtrlPressed, isLAltPressed, isRAltPressed);
+            key.setTime(evt.getTime());
             for (KeyInputListener listener : queue.getArray()) {
                 listener.onKeyReleased(key);
             }

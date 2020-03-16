@@ -1,6 +1,8 @@
 package com.jarlure.ui.input;
 
-public class LineTouchEvent {
+import com.jme3.input.event.InputEvent;
+
+public class LineTouchEvent extends InputEvent {
 
     private final int pointerId;
     public final float startX0, startY0;
@@ -9,7 +11,6 @@ public class LineTouchEvent {
     public final float x1, y1;
     public final float dx, dy;
     private final int numberOfPointer;
-    private boolean consumed;
 
     public LineTouchEvent(int pointerId, float startX0, float startY0, float x0, float y0, float startX1, float startY1, float x1, float y1, int numberOfPointer) {
         this.pointerId = pointerId;
@@ -83,14 +84,6 @@ public class LineTouchEvent {
      */
     public int getNumberOfPointer() {
         return numberOfPointer;
-    }
-
-    /**
-     * 设置已有监听器处理该事件标记。注意：触屏输入管理器不会读取该标记。每个监听器需要自己判断是否存在该标记以决定是否
-     * 处理该事件。
-     */
-    public void setConsumed() {
-        consumed = true;
     }
 
     /**

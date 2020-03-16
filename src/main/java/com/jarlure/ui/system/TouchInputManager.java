@@ -31,6 +31,7 @@ public final class TouchInputManager {
     public void onTouchEvent(TouchEvent evt) {
         int id = evt.getPointerId();
         if (id>=MAX_POINTER_NUM) return;
+
         //记录数据
         if (evt.getType()== TouchEvent.Type.DOWN){
             if (pressX[id]==NULL) pointerNum++;
@@ -38,14 +39,20 @@ public final class TouchInputManager {
             pressY[id]=evt.getY();
             timeWhenPress[id]=evt.getTime();
         }
-        switch (id){
-            case 0:
-                p0_x =evt.getX();
-                p0_y =evt.getY();
-                break;
-            case 1:
-                p1_x =evt.getX();
-                p1_y =evt.getY();
+        switch (evt.getType()){
+            case DOWN:
+            case MOVE:
+            case UP:
+                switch (id) {
+                    case 0:
+                        p0_x = evt.getX();
+                        p0_y = evt.getY();
+                        break;
+                    case 1:
+                        p1_x = evt.getX();
+                        p1_y = evt.getY();
+                        break;
+                }
                 break;
         }
         //触点事件
@@ -53,14 +60,16 @@ public final class TouchInputManager {
         switch (evt.getType()){
             case DOWN:
                 pointEvent=new PointTouchEvent(id,pressX[id],pressY[id],evt.getPressure(),pointerNum);
+                pointEvent.setTime(evt.getTime());
                 for (TouchInputListener listener:queue){
-                    listener.onPointPress(pointEvent);
+                    listener.onTouchPress(pointEvent);
                 }
                 break;
             case MOVE:
                 pointEvent=new PointTouchEvent(id,pressX[id],pressY[id],evt.getX(),evt.getY(),evt.getDeltaX(),evt.getDeltaY(),evt.getPressure(),pointerNum);
+                pointEvent.setTime(evt.getTime());
                 for (TouchInputListener listener:queue){
-                    listener.onPointDragging(pointEvent);
+                    listener.onTouchDragging(pointEvent);
                 }
                 break;
             case UP:
@@ -82,19 +91,20 @@ public final class TouchInputManager {
                     timeWhenClick[id] = NULL;
                 }
                 pointEvent=new PointTouchEvent(id,pressX[id],pressY[id],evt.getX(),evt.getY(),evt.getPressure(),pointerNum);
+                pointEvent.setTime(evt.getTime());
                 for (TouchInputListener listener:queue){
-                    listener.onPointRelease(pointEvent);
+                    listener.onTouchRelease(pointEvent);
                 }
                 if (isClicked){
                     pointEvent.resetConsumed();
                     for (TouchInputListener listener : queue.getArray()) {
-                        listener.onPointClick(pointEvent);
+                        listener.onTouchClick(pointEvent);
                     }
                 }
                 if (isDoubleClicked){
                     pointEvent.resetConsumed();
                     for (TouchInputListener listener : queue.getArray()) {
-                        listener.onPointDoubleClick(pointEvent);
+                        listener.onTouchDoubleClick(pointEvent);
                     }
                 }
                 break;
@@ -104,14 +114,16 @@ public final class TouchInputManager {
             switch (evt.getType()){
                 case SHOWPRESS:
                     pointEvent=new PointTouchEvent(id,pressX[id],pressY[id],evt.getPressure(),pointerNum);
+                    pointEvent.setTime(evt.getTime());
                     for (TouchInputListener listener:queue){
-                        listener.onPointPressShortTime(pointEvent);
+                        listener.onTouchPressShortTime(pointEvent);
                     }
                     break;
                 case LONGPRESSED:
                     pointEvent=new PointTouchEvent(id,pressX[id],pressX[id],evt.getPressure(),pointerNum);
+                    pointEvent.setTime(evt.getTime());
                     for (TouchInputListener listener:queue){
-                        listener.onPointPressLongTime(pointEvent);
+                        listener.onTouchPressLongTime(pointEvent);
                     }
                     break;
             }
@@ -122,20 +134,23 @@ public final class TouchInputManager {
             switch (evt.getType()){
                 case DOWN:
                     lineTouchEvent =new LineTouchEvent(id,pressX[0],pressY[0],p0_x,p0_y,pressX[1],pressY[1],p1_x,p1_y,pointerNum);
+                    lineTouchEvent.setTime(evt.getTime());
                     for (TouchInputListener listener : queue){
-                        listener.onLinePress(lineTouchEvent);
+                        listener.onSecondTouchPress(lineTouchEvent);
                     }
                     break;
                 case MOVE:
                     lineTouchEvent =new LineTouchEvent(id,pressX[0],pressY[0],p0_x,p0_y,pressX[1],pressY[1],p1_x,p1_y,evt.getDeltaX(),evt.getDeltaY(),pointerNum);
+                    lineTouchEvent.setTime(evt.getTime());
                     for (TouchInputListener listener : queue){
-                        listener.onLineDragging(lineTouchEvent);
+                        listener.onSecondTouchDragging(lineTouchEvent);
                     }
                     break;
                 case UP:
                     lineTouchEvent =new LineTouchEvent(id,pressX[0],pressY[0],p0_x,p0_y,pressX[1],pressY[1],p1_x,p1_y,pointerNum);
+                    lineTouchEvent.setTime(evt.getTime());
                     for (TouchInputListener listener : queue){
-                        listener.onLineRelease(lineTouchEvent);
+                        listener.onSecondTouchRelease(lineTouchEvent);
                     }
                     break;
             }

@@ -3,52 +3,52 @@ package com.jarlure.ui.input;
 public class TouchInputAdapter implements TouchInputListener {
 
     @Override
-    public void onPointPress(PointTouchEvent finger) {
+    public void onTouchPress(PointTouchEvent finger) {
 
     }
 
     @Override
-    public void onPointDragging(PointTouchEvent finger) {
+    public void onTouchDragging(PointTouchEvent finger) {
 
     }
 
     @Override
-    public void onPointRelease(PointTouchEvent finger) {
+    public void onTouchRelease(PointTouchEvent finger) {
 
     }
 
     @Override
-    public void onPointClick(PointTouchEvent finger) {
+    public void onTouchClick(PointTouchEvent finger) {
 
     }
 
     @Override
-    public void onPointDoubleClick(PointTouchEvent finger) {
+    public void onTouchDoubleClick(PointTouchEvent finger) {
 
     }
 
     @Override
-    public void onPointPressShortTime(PointTouchEvent finger) {
+    public void onTouchPressShortTime(PointTouchEvent finger) {
 
     }
 
     @Override
-    public void onPointPressLongTime(PointTouchEvent finger) {
+    public void onTouchPressLongTime(PointTouchEvent finger) {
 
     }
 
     @Override
-    public void onLinePress(LineTouchEvent twoFingers) {
+    public void onSecondTouchPress(LineTouchEvent twoFingers) {
 
     }
 
     @Override
-    public void onLineDragging(LineTouchEvent twoFingers) {
+    public void onSecondTouchDragging(LineTouchEvent twoFingers) {
 
     }
 
     @Override
-    public void onLineRelease(LineTouchEvent twoFingers) {
+    public void onSecondTouchRelease(LineTouchEvent twoFingers) {
 
     }
 

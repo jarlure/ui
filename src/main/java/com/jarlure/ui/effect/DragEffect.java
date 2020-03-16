@@ -11,7 +11,7 @@ public interface DragEffect extends AnimEffect {
      * @param x 拖拽开始时鼠标的水平坐标x值
      * @param y 拖拽开始时鼠标的垂直坐标y值
      */
-    void start(int x, int y);
+    void start(float x, float y);
 
     /**
      * 更新拖拽。对应鼠标拖拽事件
@@ -19,7 +19,7 @@ public interface DragEffect extends AnimEffect {
      * @param x 拖拽过程中鼠标的水平坐标x值
      * @param y 拖拽过程中鼠标的垂直坐标y值
      */
-    void update(int x, int y);
+    void update(float x, float y);
 
     /**
      * 结束拖拽。对应鼠标释放按键事件

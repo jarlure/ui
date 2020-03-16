@@ -1,13 +1,14 @@
 package com.jarlure.ui.input;
 
-public class MouseEvent {
+import com.jme3.input.event.InputEvent;
+
+public class MouseEvent extends InputEvent {
 
     public final int startX, startY;
     public final int x, y;
     public final int dx, dy, dw;
     private final int buttonIndex;
     private final boolean isPressed;
-    private boolean consumed;
 
     public MouseEvent(int x,int y,int buttonIndex,boolean isPressed){
         this.startX=x;
@@ -103,22 +104,6 @@ public class MouseEvent {
 
     public int getButtonIndex() {
         return buttonIndex;
-    }
-
-    /**
-     * 判断是否已有监听器处理该事件。
-     * @return  若有标记则返回true；否则返回false
-     */
-    public boolean isConsumed() {
-        return consumed;
-    }
-
-    /**
-     * 设置已有监听器处理该事件标记。注意：鼠标输入管理器不会读取该标记。每个监听器需要自己判断是否存在该标记以决定是否
-     * 处理该事件。
-     */
-    public void setConsumed() {
-        consumed = true;
     }
 
     /**

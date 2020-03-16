@@ -25,13 +25,13 @@ public class HorizontalDragEffect implements DragEffect {
     }
 
     @Override
-    public void start(int x, int y) {
+    public void start(float x, float y) {
         finishImmediately();
         endX = startX = x;
     }
 
     @Override
-    public void update(int x, int y) {
+    public void update(float x, float y) {
         float dx = x - endX;
         move(dx);
         endX = x;

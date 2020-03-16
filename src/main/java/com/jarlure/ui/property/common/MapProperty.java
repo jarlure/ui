@@ -49,7 +49,9 @@ public class MapProperty<K, V> {
      * @return 该键映射的值。但如果键不存在，则返回默认值
      */
     public V getOrDefault(K key, V value) {
-        return this.value.getOrDefault(key, value);
+        V result = this.value.get(key);
+        if (result == null) return value;
+        return result;
     }
 
     /**
@@ -97,7 +99,7 @@ public class MapProperty<K, V> {
      * @return true如果键值被移除；false如果给定键或值与属性值映射表中的不匹配。
      */
     public boolean remove(K key, V value) {
-        boolean success = this.value.remove(key, value);
+        boolean success = value==this.value.remove(key);
         if (success) propertyRemoved(key, value);
         return success;
     }

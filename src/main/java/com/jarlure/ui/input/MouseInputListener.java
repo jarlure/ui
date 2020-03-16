@@ -1,6 +1,8 @@
 package com.jarlure.ui.input;
 
-public interface MouseInputListener {
+import com.jme3.input.controls.InputListener;
+
+public interface MouseInputListener extends InputListener {
 
     void onLeftButtonPress(MouseEvent mouse);
 

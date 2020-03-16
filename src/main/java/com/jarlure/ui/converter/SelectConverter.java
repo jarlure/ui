@@ -1,9 +1,11 @@
 package com.jarlure.ui.converter;
 
 import com.jarlure.ui.component.UIComponent;
+import com.jarlure.ui.input.LineTouchEvent;
 import com.jarlure.ui.input.MouseEvent;
 import com.jarlure.ui.input.PointTouchEvent;
 import com.jarlure.ui.property.*;
+import com.jme3.input.event.InputEvent;
 import com.jme3.material.MatParam;
 import com.jme3.material.Material;
 import com.jme3.math.Vector4f;
@@ -16,7 +18,7 @@ import java.util.List;
 public class SelectConverter implements WithUIComponent {
 
     protected UIComponent rootNode;
-    protected int validMark;
+    protected long checkTime;
     protected UIComponent selected;
     protected List<UIComponent> parentList = new ArrayList<>();
 
@@ -31,31 +33,41 @@ public class SelectConverter implements WithUIComponent {
         rootNode = component;
     }
 
-    /**
-     * 判断给定组件是否被鼠标选中。
-     *
-     * @param component 给定的组件
-     * @param mouse     鼠标
-     * @return 未被选中、这个组件不可见或是被其他组件覆盖时返回false；否则返回true
-     */
-    public boolean isSelect(UIComponent component, MouseEvent mouse) {
-        return isSelect(component,mouse.hashCode(),mouse.x,mouse.y);
+    public boolean isSelect(UIComponent component, InputEvent event){
+        if (event instanceof MouseEvent) {
+            return isSelect(component,event.getTime(),((MouseEvent) event).x,((MouseEvent) event).y);
+        }
+        if (event instanceof PointTouchEvent) {
+            return isSelect(component,event.getTime(),((PointTouchEvent) event).x,((PointTouchEvent) event).y);
+        }
+        if (event instanceof LineTouchEvent) {
+            return isSelect(component,event.getTime(),((LineTouchEvent) event).x0,((LineTouchEvent) event).y0);
+        }
+        return false;
     }
 
-    /**
-     * 判断被鼠标选中的组件当中是否有名为给定组件名的组件。
-     *
-     * @param name  给定组件名
-     * @param mouse 鼠标
-     * @return 如果被选中的组件当中有叫作给定组件名的，返回true；否则返回false
-     */
-    public boolean isSelect(String name, MouseEvent mouse) {
-        return isSelect(name, mouse.hashCode(), mouse.x, mouse.y);
+    public boolean isSelect(String name, InputEvent event) {
+        if (event instanceof MouseEvent) {
+            return isSelect(name,event.getTime(),((MouseEvent) event).x,((MouseEvent) event).y);
+        }
+        if (event instanceof PointTouchEvent) {
+            return isSelect(name,event.getTime(),((PointTouchEvent) event).x,((PointTouchEvent) event).y);
+        }
+        if (event instanceof LineTouchEvent) {
+            return isSelect(name,event.getTime(),((LineTouchEvent) event).x0,((LineTouchEvent) event).y0);
+        }
+        return false;
     }
 
-    public boolean isSelect(String[] names,MouseEvent mouse){
-        for (String name:names){
-            if (isSelect(name,mouse))return true;
+    public boolean isSelect(String[] names, InputEvent event) {
+        if (event instanceof MouseEvent) {
+            return isSelect(names,event.getTime(),((MouseEvent) event).x,((MouseEvent) event).y);
+        }
+        if (event instanceof PointTouchEvent) {
+            return isSelect(names,event.getTime(),((PointTouchEvent) event).x,((PointTouchEvent) event).y);
+        }
+        if (event instanceof LineTouchEvent) {
+            return isSelect(names,event.getTime(),((LineTouchEvent) event).x0,((LineTouchEvent) event).y0);
         }
         return false;
     }
@@ -64,44 +76,15 @@ public class SelectConverter implements WithUIComponent {
      * 判断给定组件是否被鼠标选中。
      *
      * @param component 给定的组件
-     * @param touchPoint 触点
+     * @param time      事件的发生时间
+     * @param x         拣选点水平位置坐标x
+     * @param y         拣选点垂直位置坐标y
      * @return 未被选中、这个组件不可见或是被其他组件覆盖时返回false；否则返回true
      */
-    public boolean isSelect(UIComponent component, PointTouchEvent touchPoint) {
-        return isSelect(component,touchPoint.hashCode(),touchPoint.x,touchPoint.y);
-    }
-
-    /**
-     * 判断被触点选中的组件当中是否有名为给定组件名的组件。
-     *
-     * @param name  给定组件名
-     * @param touchPoint 触点
-     * @return 如果被选中的组件当中有叫作给定组件名的，返回true；否则返回false
-     */
-    public boolean isSelect(String name, PointTouchEvent touchPoint) {
-        return isSelect(name,touchPoint.hashCode(),touchPoint.x,touchPoint.y);
-    }
-
-    public boolean isSelect(String[] names,PointTouchEvent touchPoint){
-        for (String name:names){
-            if (isSelect(name,touchPoint))return true;
-        }
-        return false;
-    }
-
-    /**
-     * 判断给定组件是否被鼠标选中。
-     *
-     * @param component 给定的组件
-     * @param hashcode 事件的哈希码
-     * @param x        拣选点水平位置坐标x
-     * @param y        拣选点垂直位置坐标y
-     * @return 未被选中、这个组件不可见或是被其他组件覆盖时返回false；否则返回true
-     */
-    public boolean isSelect(UIComponent component, int hashcode, float x, float y) {
+    public boolean isSelect(UIComponent component, long time, float x, float y) {
         //更新拣选结果
-        if (validMark != hashcode) {
-            validMark = hashcode;
+        if (time<=0 || checkTime != time) {
+            checkTime = time;
             UIComponent lastSelected = selected;
             if (lastSelected == rootNode) lastSelected = null;
             lastSelected = checkRange(lastSelected, x, y);
@@ -121,16 +104,16 @@ public class SelectConverter implements WithUIComponent {
     /**
      * 更新并判断给定拣选点是否选中了给定组件。
      *
-     * @param name     给定组件名
-     * @param hashcode 事件的哈希码
-     * @param x        拣选点水平位置坐标x
-     * @param y        拣选点垂直位置坐标y
+     * @param name 给定组件名
+     * @param time 事件的发生时间
+     * @param x    拣选点水平位置坐标x
+     * @param y    拣选点垂直位置坐标y
      * @return 如果被选中的组件当中有叫作给定组件名的，返回true；否则返回false
      */
-    public boolean isSelect(String name, int hashcode, float x, float y) {
+    public boolean isSelect(String name, long time, float x, float y) {
         //更新拣选结果
-        if (validMark != hashcode) {
-            validMark = hashcode;
+        if (time<=0 || checkTime != time) {
+            checkTime = time;
             UIComponent lastSelected = selected;
             if (lastSelected == rootNode) lastSelected = null;
             lastSelected = checkRange(lastSelected, x, y);
@@ -146,9 +129,9 @@ public class SelectConverter implements WithUIComponent {
         return false;
     }
 
-    public boolean isSelect(String[] names, int hashcode, float x, float y) {
+    public boolean isSelect(String[] names, long time, float x, float y) {
         for (String name:names){
-            if (isSelect(name,hashcode,x,y))return true;
+            if (isSelect(name,time,x,y))return true;
         }
         return false;
     }

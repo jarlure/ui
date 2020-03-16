@@ -8,6 +8,7 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.input.RawInputListener;
+import com.jme3.input.controls.InputListener;
 import com.jme3.input.event.*;
 import com.jme3.system.JmeContext;
 
@@ -30,36 +31,12 @@ public class InputManager {
         app.getStateManager().detach(instance);
     }
 
-    public static void add(MouseInputListener listener) {
-        instance.mouseInputManager.add(listener);
+    public static void add(InputListener listener){
+        instance.add(listener);
     }
 
-    public static void remove(MouseInputListener listener) {
-        instance.mouseInputManager.remove(listener);
-    }
-
-    public static void add(KeyInputListener listener) {
-        instance.keyInputManager.add(listener);
-    }
-
-    public static void remove(KeyInputListener listener) {
-        instance.keyInputManager.remove(listener);
-    }
-
-    public static void add(TouchInputListener listener){
-        instance.touchInputManager.add(listener);
-    }
-
-    public static void remove(TouchInputListener listener){
-        instance.touchInputManager.remove(listener);
-    }
-
-    public static void add(JoystickInputListener listener){
-        instance.joystickInputManager.add(listener);
-    }
-
-    public static void remove(JoystickInputListener listener){
-        instance.joystickInputManager.remove(listener);
+    public static void remove(InputListener listener){
+        instance.remove(listener);
     }
 
     private final static class InputState extends AbstractAppState implements RawInputListener {
@@ -82,6 +59,8 @@ public class InputManager {
                     joystickInputManager=new JoystickInputManager();
                 }
             }
+            app.getInputManager().setSimulateMouse(false);
+            app.getInputManager().setSimulateKeyboard(false);
             app.getInputManager().addRawInputListener(this);
         }
 
@@ -99,18 +78,44 @@ public class InputManager {
             mouseInputManager.update(tpf);
         }
 
-        @Override
-        public void onMouseMotionEvent(MouseMotionEvent evt) {
-            if (touchInputManager==null || touchInputManager.pointerNum<2) {
-                mouseInputManager.onMouseMotionEvent(evt);
+        public void add(InputListener listener){
+            if (listener instanceof MouseInputListener){
+                if (mouseInputManager!=null) mouseInputManager.add((MouseInputListener) listener);
+            }
+            if (listener instanceof KeyInputListener){
+                if (keyInputManager!=null) keyInputManager.add((KeyInputListener) listener);
+            }
+            if (listener instanceof TouchInputListener){
+                if (touchInputManager!=null) touchInputManager.add((TouchInputListener) listener);
+            }
+            if (listener instanceof JoystickInputListener){
+                if (joystickInputManager!=null) joystickInputManager.add((JoystickInputListener) listener);
+            }
+        }
+
+        public void remove(InputListener listener){
+            if (listener instanceof MouseInputListener){
+                if (mouseInputManager!=null) mouseInputManager.remove((MouseInputListener) listener);
+            }
+            if (listener instanceof KeyInputListener){
+                if (keyInputManager!=null) keyInputManager.remove((KeyInputListener) listener);
+            }
+            if (listener instanceof TouchInputListener){
+                if (touchInputManager!=null) touchInputManager.remove((TouchInputListener) listener);
+            }
+            if (listener instanceof JoystickInputListener){
+                if (joystickInputManager!=null) joystickInputManager.remove((JoystickInputListener) listener);
             }
         }
 
         @Override
+        public void onMouseMotionEvent(MouseMotionEvent evt) {
+            mouseInputManager.onMouseMotionEvent(evt);
+        }
+
+        @Override
         public void onMouseButtonEvent(MouseButtonEvent evt) {
-            if (touchInputManager==null || touchInputManager.pointerNum<2) {
-                mouseInputManager.onMouseButtonEvent(evt);
-            }
+            mouseInputManager.onMouseButtonEvent(evt);
         }
 
         @Override

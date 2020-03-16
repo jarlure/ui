@@ -1,6 +1,8 @@
 package com.jarlure.ui.input;
 
-public interface KeyInputListener {
+import com.jme3.input.controls.InputListener;
+
+public interface KeyInputListener extends InputListener {
 
     /**
      * 当有非控制键（ctrl、shift、alt）按下时触发

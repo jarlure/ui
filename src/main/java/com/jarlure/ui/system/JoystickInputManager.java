@@ -22,6 +22,7 @@ public final class JoystickInputManager {
 
     public void onJoyAxisEvent(JoyAxisEvent evt){
         JoystickEvent joystick = new JoystickEvent(evt.getJoyIndex(),evt.getAxisIndex(),evt.getValue());
+        joystick.setTime(evt.getTime());
         for (JoystickInputListener listener : queue){
             listener.onAxisMove(joystick);
         }
@@ -30,6 +31,7 @@ public final class JoystickInputManager {
 
     public void onJoyButtonEvent(JoyButtonEvent evt){
         JoystickEvent joystick = new JoystickEvent(evt.getJoyIndex(),evt.getButtonIndex());
+        joystick.setTime(evt.getTime());
         if (evt.isPressed()){
             for (JoystickInputListener listener : queue){
                 listener.onButtonPressed(joystick);

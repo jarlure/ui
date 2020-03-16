@@ -1,12 +1,13 @@
 package com.jarlure.ui.input;
 
-public class JoystickEvent {
+import com.jme3.input.event.InputEvent;
+
+public class JoystickEvent extends InputEvent {
 
     private final int joystickId;
     public final int buttonIndex;
     public final int axisIndex;
     public final float value;
-    private boolean consumed;
 
     public JoystickEvent(int joystickId,int buttonIndex){
         this.joystickId=joystickId;
@@ -24,14 +25,6 @@ public class JoystickEvent {
 
     public int getJoystickId() {
         return joystickId;
-    }
-
-    /**
-     * 设置已有监听器处理该事件标记。注意：触屏输入管理器不会读取该标记。每个监听器需要自己判断是否存在该标记以决定是否
-     * 处理该事件。
-     */
-    public void setConsumed() {
-        consumed = true;
     }
 
     /**

@@ -32,7 +32,7 @@ public class HorizontalScrollDragEffect extends HorizontalDragEffect {
     }
 
     @Override
-    public void update(int x, int y) {
+    public void update(float x, float y) {
         if (getMinAndMaxXCenter(minAndMaxValueStore) == null) return;
         float minXCenter = minAndMaxValueStore[0];
         float maxXCenter = minAndMaxValueStore[1];
