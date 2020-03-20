@@ -1,5 +1,7 @@
 package com.jarlure.ui.input;
 
+import com.jarlure.ui.property.AABB;
+import com.jarlure.ui.property.OBB;
 import com.jme3.input.event.InputEvent;
 
 public class TouchMouseAdapter implements TouchInputListener,MouseInputListener {
@@ -8,23 +10,60 @@ public class TouchMouseAdapter implements TouchInputListener,MouseInputListener 
     }
 
     public void onPointDragging(InputEvent point){
-
     }
 
     public void onPointRelease(InputEvent point){
-
     }
 
     public void onPointClick(InputEvent point){
-
     }
 
     public void onPointDoubleClick(InputEvent point){
-
     }
 
     public void onPointPressLongTime(InputEvent point){
+    }
 
+    public float getX(InputEvent point){
+        if (point instanceof MouseEvent){
+            return ((MouseEvent) point).x;
+        }else {
+            return ((PointTouchEvent) point).x;
+        }
+    }
+
+    public float getY(InputEvent point){
+        if (point instanceof MouseEvent){
+            return ((MouseEvent) point).y;
+        }else {
+            return ((PointTouchEvent) point).y;
+        }
+    }
+
+    public float getPressX(InputEvent point){
+        if (point instanceof MouseEvent){
+            return ((MouseEvent) point).getPressX();
+        }else {
+            return ((PointTouchEvent) point).getPressX();
+        }
+    }
+
+    public float getPressY(InputEvent point){
+        if (point instanceof MouseEvent){
+            return ((MouseEvent) point).getPressY();
+        }else {
+            return ((PointTouchEvent) point).getPressY();
+        }
+    }
+
+    public boolean contains(AABB box,InputEvent point){
+        if (point instanceof MouseEvent) return box.contains(((MouseEvent) point).x,((MouseEvent) point).y);
+        else return box.contains(((PointTouchEvent) point).x,((PointTouchEvent) point).y);
+    }
+
+    public boolean contains(OBB box,InputEvent point){
+        if (point instanceof MouseEvent) return box.contains(((MouseEvent) point).x,((MouseEvent) point).y);
+        else return box.contains(((PointTouchEvent) point).x,((PointTouchEvent) point).y);
     }
 
     @Override

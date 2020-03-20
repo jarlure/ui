@@ -632,7 +632,7 @@ public final class ImageHandler {
             bitmap.setHasAlpha(false);//通知Canvas忽略对alpha值的预处理检测
             bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
 
-            Image result = ImageHandler.createEmptyImage(width,height);
+            Image result = createEmptyImage(width,height);
             ByteBuffer data = result.getData(0);
             bitmap.copyPixelsToBuffer(data);
             return result;
