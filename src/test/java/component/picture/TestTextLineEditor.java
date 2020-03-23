@@ -3,7 +3,7 @@ package component.picture;
 import com.jarlure.ui.bean.Direction;
 import com.jarlure.ui.component.Picture;
 import com.jarlure.ui.component.UIComponent;
-import com.jarlure.ui.converter.FocusConverter;
+import com.jarlure.ui.property.FocusProperty;
 import com.jarlure.ui.converter.SelectConverter;
 import com.jarlure.ui.effect.TextEditEffect;
 import com.jarlure.ui.effect.TextLineEditEffect;
@@ -72,8 +72,8 @@ public class TestTextLineEditor extends SimpleApplication {
             }
 
             @Override
-            public FocusConverter getFocusConverter() {
-                return editor.get(FocusConverter.class);
+            public FocusProperty getFocusConverter() {
+                return editor.get(FocusProperty.class);
             }
 
             @Override
@@ -90,8 +90,8 @@ public class TestTextLineEditor extends SimpleApplication {
         InputManager.add(new TextEditKeyInputListener(editor) {
 
             @Override
-            public FocusConverter getFocusConverter() {
-                return editor.get(FocusConverter.class);
+            public FocusProperty getFocusConverter() {
+                return editor.get(FocusProperty.class);
             }
 
             @Override
@@ -109,7 +109,7 @@ public class TestTextLineEditor extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         //驱动光标闪烁
-        if (editor.get(FocusConverter.class).isFocus(editor)){
+        if (editor.get(FocusProperty.class).isFocus(editor)){
             editor.get(TextEditEffect.class).update(tpf);
         }
     }

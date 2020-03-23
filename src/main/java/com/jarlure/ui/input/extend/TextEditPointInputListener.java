@@ -1,7 +1,7 @@
 package com.jarlure.ui.input.extend;
 
 import com.jarlure.ui.component.UIComponent;
-import com.jarlure.ui.converter.FocusConverter;
+import com.jarlure.ui.property.FocusProperty;
 import com.jarlure.ui.converter.IndexConverter;
 import com.jarlure.ui.converter.SelectConverter;
 import com.jarlure.ui.effect.TextEditEffect;
@@ -29,7 +29,7 @@ public abstract class TextEditPointInputListener extends TouchMouseAdapter {
 
     public abstract SelectConverter getSelectConverter();
 
-    public abstract FocusConverter getFocusConverter();
+    public abstract FocusProperty getFocusConverter();
 
     public abstract Property<Integer> getCursorPositionIndex();
 
@@ -101,17 +101,17 @@ public abstract class TextEditPointInputListener extends TouchMouseAdapter {
 
     @Override
     public void onPointPress(InputEvent point) {
-        FocusConverter focusConverter = getFocusConverter();
+        FocusProperty focusProperty = getFocusConverter();
         if (isTextSelected(point)){
-            if (focusConverter.isFocus(text)){
+            if (focusProperty.isFocus(text)){
                 setCursorPosition(point);
             }else {
-                focusConverter.setFocus(text);
+                focusProperty.setFocus(text);
                 selectAll();
             }
         }else {
-            if (focusConverter.isFocus(text)) {
-                focusConverter.setFocus(null);
+            if (focusProperty.isFocus(text)) {
+                focusProperty.setFocus(null);
                 getTextEditEffect().finishImmediately();
             }
         }

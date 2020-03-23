@@ -1,7 +1,7 @@
 package com.jarlure.ui.input.extend;
 
 import com.jarlure.ui.component.UIComponent;
-import com.jarlure.ui.converter.FocusConverter;
+import com.jarlure.ui.property.FocusProperty;
 import com.jarlure.ui.effect.TextEditEffect;
 import com.jarlure.ui.input.KeyEvent;
 import com.jarlure.ui.input.KeyInputAdapter;
@@ -23,7 +23,7 @@ public abstract class TextEditKeyInputListener extends KeyInputAdapter {
         this.text = text;
     }
 
-    protected abstract FocusConverter getFocusConverter();
+    protected abstract FocusProperty getFocusConverter();
 
     protected abstract Property<Integer> getCursorPositionIndex();
 
