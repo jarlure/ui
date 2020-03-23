@@ -1,6 +1,8 @@
 package com.jarlure.ui.property;
 
 import com.jarlure.ui.property.common.Property;
+import com.jarlure.ui.property.common.PropertyListener;
+import com.jme3.util.SafeArrayList;
 
 /**
  * 焦点属性。该类用于解决快捷键或关联组件一对多的情况，例如按下Esc键会优先关闭处于焦点状态的弹出框而非弹出是否关闭
@@ -35,6 +37,12 @@ public class FocusProperty extends Property<Object> {
      */
     public Object getFocus() {
         return super.getValue();
+    }
+
+    @Override
+    public void addPropertyListener(PropertyListener<Object> listener) {
+        if (listenerList == null) listenerList = new SafeArrayList(PropertyListener.class);
+        listenerList.add(listener);
     }
 
     @Override
