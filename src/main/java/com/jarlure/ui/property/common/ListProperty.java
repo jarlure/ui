@@ -207,6 +207,7 @@ public class ListProperty<T> {
      */
     public void removeAll() {
         int size = size();
+        if (size==0)return;
         int[] index = new int[size];
         Object[] values = new Object[index.length];
         for (int i = index.length - 1; i >= 0; i--) {

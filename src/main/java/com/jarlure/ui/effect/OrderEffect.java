@@ -54,6 +54,7 @@ public class OrderEffect {
 
         @Override
         public void propertyRemoved(int[] index, Object[] value) {
+            if (index==null)return;
             int minIndex=index[0];{
                 for (int i:index){
                     if (i<minIndex) minIndex=i;
