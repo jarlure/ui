@@ -72,7 +72,7 @@ public class TestTextLineEditor extends SimpleApplication {
             }
 
             @Override
-            public FocusProperty getFocusConverter() {
+            public FocusProperty getFocusProperty() {
                 return editor.get(FocusProperty.class);
             }
 
@@ -90,7 +90,7 @@ public class TestTextLineEditor extends SimpleApplication {
         InputManager.add(new TextEditKeyInputListener(editor) {
 
             @Override
-            public FocusProperty getFocusConverter() {
+            public FocusProperty getFocusProperty() {
                 return editor.get(FocusProperty.class);
             }
 

@@ -6,7 +6,7 @@ import com.jarlure.ui.property.common.Property;
  * 焦点属性。该类用于解决快捷键或关联组件一对多的情况，例如按下Esc键会优先关闭处于焦点状态的弹出框而非弹出是否关闭
  * 程序的提示框
  */
-public class FocusProperty extends Property {
+public class FocusProperty extends Property<Object> {
 
     /**
      * 判断对象是否处于焦点状态。
@@ -25,7 +25,7 @@ public class FocusProperty extends Property {
      * @param focus 准备处于焦点状态的对象
      */
     public void setFocus(Object focus) {
-        this.value = focus;
+        super.setValue(focus);
     }
 
     /**
@@ -34,19 +34,19 @@ public class FocusProperty extends Property {
      * @return 处于焦点状态的对象
      */
     public Object getFocus() {
-        return value;
+        return super.getValue();
     }
 
     @Override
     @Deprecated
     public Object getValue() {
-        return getFocus();
+        return super.getValue();
     }
 
     @Override
     @Deprecated
     public void setValue(Object value) {
-        setFocus(value);
+        super.setValue(value);
     }
 
 }

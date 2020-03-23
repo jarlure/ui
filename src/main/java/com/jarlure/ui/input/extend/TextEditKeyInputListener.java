@@ -23,7 +23,7 @@ public abstract class TextEditKeyInputListener extends KeyInputAdapter {
         this.text = text;
     }
 
-    protected abstract FocusProperty getFocusConverter();
+    protected abstract FocusProperty getFocusProperty();
 
     protected abstract Property<Integer> getCursorPositionIndex();
 
@@ -39,7 +39,7 @@ public abstract class TextEditKeyInputListener extends KeyInputAdapter {
 
     @Override
     public void onKeyPressed(KeyEvent key) {
-        if (!getFocusConverter().isFocus(text)) return;
+        if (!getFocusProperty().isFocus(text)) return;
         switch (key.getCode()) {
             case KeyInput.KEY_LEFT:
                 if (key.isCtrlPressedOnly()) leftMoveSelect();
@@ -57,7 +57,7 @@ public abstract class TextEditKeyInputListener extends KeyInputAdapter {
                 return;
             case KeyInput.KEY_RETURN:
                 getTextEditEffect().finishImmediately();
-                getFocusConverter().setFocus(null);
+                getFocusProperty().setFocus(null);
                 return;
             case KeyInput.KEY_A:
                 if (key.isCtrlPressedOnly()){
@@ -89,7 +89,7 @@ public abstract class TextEditKeyInputListener extends KeyInputAdapter {
 
     @Override
     public void onKeyReleased(KeyEvent key) {
-        if (!getFocusConverter().isFocus(text)) return;
+        if (!getFocusProperty().isFocus(text)) return;
         //输入法输入值
         if (key.getCode() == 0 && key.getValue() != 0) {
             insert(key.getValue());

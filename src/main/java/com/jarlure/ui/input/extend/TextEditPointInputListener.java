@@ -29,7 +29,7 @@ public abstract class TextEditPointInputListener extends TouchMouseAdapter {
 
     public abstract SelectConverter getSelectConverter();
 
-    public abstract FocusProperty getFocusConverter();
+    public abstract FocusProperty getFocusProperty();
 
     public abstract Property<Integer> getCursorPositionIndex();
 
@@ -101,7 +101,7 @@ public abstract class TextEditPointInputListener extends TouchMouseAdapter {
 
     @Override
     public void onPointPress(InputEvent point) {
-        FocusProperty focusProperty = getFocusConverter();
+        FocusProperty focusProperty = getFocusProperty();
         if (isTextSelected(point)){
             if (focusProperty.isFocus(text)){
                 setCursorPosition(point);
@@ -119,7 +119,7 @@ public abstract class TextEditPointInputListener extends TouchMouseAdapter {
 
     @Override
     public void onPointDragging(InputEvent point) {
-        if (getFocusConverter().isFocus(text)){
+        if (getFocusProperty().isFocus(text)){
             setSelectToIndex(point);
         }
     }
@@ -141,7 +141,7 @@ public abstract class TextEditPointInputListener extends TouchMouseAdapter {
 
     @Override
     public void onLeftButtonDoubleClick(MouseEvent mouse) {
-        if (getFocusConverter().isFocus(text)) {
+        if (getFocusProperty().isFocus(text)) {
             selectAll();
         }
     }
