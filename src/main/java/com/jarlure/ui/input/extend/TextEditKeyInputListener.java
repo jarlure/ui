@@ -1,10 +1,10 @@
 package com.jarlure.ui.input.extend;
 
 import com.jarlure.ui.component.UIComponent;
+import com.jarlure.ui.converter.FocusConverter;
 import com.jarlure.ui.effect.TextEditEffect;
 import com.jarlure.ui.input.KeyEvent;
 import com.jarlure.ui.input.KeyInputAdapter;
-import com.jarlure.ui.property.FocusProperty;
 import com.jarlure.ui.property.TextProperty;
 import com.jarlure.ui.property.common.Property;
 import com.jarlure.ui.util.ClipboardEditor;
@@ -23,13 +23,11 @@ public abstract class TextEditKeyInputListener extends KeyInputAdapter {
         this.text = text;
     }
 
+    protected abstract FocusConverter getFocusConverter();
+
     protected abstract Property<Integer> getCursorPositionIndex();
 
     protected abstract Property<Integer> getSelectFromIndex();
-
-    protected FocusProperty getFocusProperty() {
-        return text.get(FocusProperty.class);
-    }
 
     protected TextProperty getTextProperty() {
         return text.get(TextProperty.class);
@@ -41,7 +39,7 @@ public abstract class TextEditKeyInputListener extends KeyInputAdapter {
 
     @Override
     public void onKeyPressed(KeyEvent key) {
-        if (!getFocusProperty().isFocus()) return;
+        if (!getFocusConverter().isFocus(text)) return;
         switch (key.getCode()) {
             case KeyInput.KEY_LEFT:
                 if (key.isCtrlPressedOnly()) leftMoveSelect();
@@ -58,11 +56,15 @@ public abstract class TextEditKeyInputListener extends KeyInputAdapter {
                 deleteSelect();
                 return;
             case KeyInput.KEY_RETURN:
-                if (getFocusProperty().isFocus()) {
-                    getTextEditEffect().finishImmediately();
-                    getFocusProperty().setFocus(false);
-                }
+                getTextEditEffect().finishImmediately();
+                getFocusConverter().setFocus(null);
                 return;
+            case KeyInput.KEY_A:
+                if (key.isCtrlPressedOnly()){
+                    selectAll();
+                    return;
+                }
+                break;
             case KeyInput.KEY_C:
                 if (key.isCtrlPressedOnly()) {
                     copy();
@@ -87,7 +89,7 @@ public abstract class TextEditKeyInputListener extends KeyInputAdapter {
 
     @Override
     public void onKeyReleased(KeyEvent key) {
-        if (!getFocusProperty().isFocus()) return;
+        if (!getFocusConverter().isFocus(text)) return;
         //输入法输入值
         if (key.getCode() == 0 && key.getValue() != 0) {
             insert(key.getValue());
@@ -223,6 +225,17 @@ public abstract class TextEditKeyInputListener extends KeyInputAdapter {
         index = cursorPositionIndex.getValue();
         getTextEditEffect().setCursorPosition(0, index);
         getSelectFromIndex().setValue(index);
+    }
+
+    /**
+     * 全选
+     */
+    protected void selectAll() {
+        String text = getTextProperty().getText();
+        int toIndex = text == null ? 0 : text.length();
+        getTextEditEffect().select(0, 0, 0, toIndex);
+        getCursorPositionIndex().setValue(toIndex);
+        getSelectFromIndex().setValue(0);
     }
 
     /**

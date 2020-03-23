@@ -3,12 +3,12 @@ package component.picture;
 import com.jarlure.ui.bean.Direction;
 import com.jarlure.ui.component.Picture;
 import com.jarlure.ui.component.UIComponent;
+import com.jarlure.ui.converter.FocusConverter;
 import com.jarlure.ui.converter.SelectConverter;
 import com.jarlure.ui.effect.TextEditEffect;
 import com.jarlure.ui.effect.TextLineEditEffect;
 import com.jarlure.ui.input.extend.TextEditKeyInputListener;
-import com.jarlure.ui.input.extend.TextEditMouseInputListener;
-import com.jarlure.ui.property.FocusProperty;
+import com.jarlure.ui.input.extend.TextEditPointInputListener;
 import com.jarlure.ui.property.FontProperty;
 import com.jarlure.ui.property.TextProperty;
 import com.jarlure.ui.property.common.Property;
@@ -59,16 +59,21 @@ public class TestTextLineEditor extends SimpleApplication {
         Property<Integer> selectFromIndex=new Property<>();
         cursorPositionIndex.addInputPropertyFilter(value -> {
             if (value<0) return 0;
-            int numberOfText = textProperty.getTextPosInImg().length/2;
+            int numberOfText = textProperty.getText().length();
             if (value>numberOfText) return numberOfText;
             return value;
         });
 
         //添加鼠标输入监听器
-        InputManager.add(new TextEditMouseInputListener(editor) {
+        InputManager.add(new TextEditPointInputListener(editor) {
             @Override
             public SelectConverter getSelectConverter() {
                 return editor.get(SelectConverter.class);
+            }
+
+            @Override
+            public FocusConverter getFocusConverter() {
+                return editor.get(FocusConverter.class);
             }
 
             @Override
@@ -83,6 +88,12 @@ public class TestTextLineEditor extends SimpleApplication {
         });
         //添加键盘输入监听器
         InputManager.add(new TextEditKeyInputListener(editor) {
+
+            @Override
+            public FocusConverter getFocusConverter() {
+                return editor.get(FocusConverter.class);
+            }
+
             @Override
             protected Property<Integer> getCursorPositionIndex() {
                 return cursorPositionIndex;
@@ -98,7 +109,7 @@ public class TestTextLineEditor extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         //驱动光标闪烁
-        if (editor.get(FocusProperty.class).isFocus()){
+        if (editor.get(FocusConverter.class).isFocus(editor)){
             editor.get(TextEditEffect.class).update(tpf);
         }
     }

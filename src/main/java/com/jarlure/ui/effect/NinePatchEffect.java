@@ -3,9 +3,7 @@ package com.jarlure.ui.effect;
 import com.jarlure.ui.property.ImageProperty;
 import com.jarlure.ui.property.TextProperty;
 import com.jarlure.ui.util.ImageHandler;
-import com.jme3.math.ColorRGBA;
 import com.jme3.texture.Image;
-import com.jme3.texture.image.ImageRaster;
 import com.jme3.util.BufferUtils;
 import com.jme3.util.NativeObjectManager;
 
@@ -191,29 +189,39 @@ public class NinePatchEffect {
         if (des == null || des.getWidth() != width || des.getHeight() != height) {
             des = ImageHandler.createEmptyImage(width, height);
         }
-        ImageRaster srcRaster = ImageRaster.create(src);
-        ImageRaster desRaster = ImageRaster.create(des);
-        ColorRGBA color = new ColorRGBA();
-        float repeatY = 0;
-        for (int srcY = 0, desY = 0; srcY < src.getHeight(); srcY++) {
+        ByteBuffer srcData = src.getData(0);
+        ByteBuffer desData = des.getData(0);
+        srcData.position(0);
+        desData.position(0);
+        byte[] srcLine = new byte[4*src.getWidth()];
+        byte[] desLine = new byte[4*des.getWidth()];
+        float repeatY=0,repeatX;
+        int srcX,srcY,srcXi,desXi;
+        for (srcY=0;srcY<src.getHeight();srcY++){
+            srcData.get(srcLine);
             if (verticalScale != null && verticalScale[srcY]) repeatY += scaleY;
             else repeatY += 1;
             while (repeatY >= 1) {
                 repeatY -= 1;
-                float repeatX = 0;
-                for (int srcX = 0, desX = 0; srcX < src.getWidth(); srcX++) {
-                    srcRaster.getPixel(srcX, srcY, color);
-                    if (horizontalScale != null && horizontalScale[srcX]) repeatX += scaleX;
-                    else repeatX += 1;
-                    while (repeatX >= 1) {
-                        repeatX -= 1;
-                        desRaster.setPixel(desX, desY, color);
-                        desX++;
+                repeatX = 0;
+                for (srcX=0,desXi=0;srcX<src.getWidth();srcX++){
+                    srcXi=4*srcX;
+                    if (horizontalScale != null && horizontalScale[srcX]){
+                        repeatX += scaleX;
+                        while (repeatX >= 1) {
+                            repeatX -= 1;
+                            System.arraycopy(srcLine,srcXi,desLine,desXi,4);
+                            desXi+=4;
+                        }
+                    }else {
+                        System.arraycopy(srcLine,srcXi,desLine,desXi,4);
+                        desXi+=4;
                     }
                 }
-                desY++;
+                desData.put(desLine);
             }
         }
+        des.setUpdateNeeded();
     }
 
     /**

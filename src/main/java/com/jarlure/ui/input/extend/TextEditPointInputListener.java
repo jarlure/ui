@@ -1,17 +1,19 @@
 package com.jarlure.ui.input.extend;
 
 import com.jarlure.ui.component.UIComponent;
+import com.jarlure.ui.converter.FocusConverter;
 import com.jarlure.ui.converter.IndexConverter;
 import com.jarlure.ui.converter.SelectConverter;
 import com.jarlure.ui.effect.TextEditEffect;
 import com.jarlure.ui.input.MouseEvent;
-import com.jarlure.ui.input.MouseInputAdapter;
+import com.jarlure.ui.input.PointTouchEvent;
+import com.jarlure.ui.input.TouchMouseAdapter;
 import com.jarlure.ui.property.AABB;
-import com.jarlure.ui.property.FocusProperty;
 import com.jarlure.ui.property.TextProperty;
 import com.jarlure.ui.property.common.Property;
+import com.jme3.input.event.InputEvent;
 
-public abstract class TextEditMouseInputListener extends MouseInputAdapter {
+public abstract class TextEditPointInputListener extends TouchMouseAdapter {
 
     private UIComponent text;
 
@@ -21,19 +23,17 @@ public abstract class TextEditMouseInputListener extends MouseInputAdapter {
      *
      * @param text 单行文本。该组件需要有TextEditEffect
      */
-    public TextEditMouseInputListener(UIComponent text) {
+    public TextEditPointInputListener(UIComponent text) {
         this.text = text;
     }
 
     public abstract SelectConverter getSelectConverter();
 
+    public abstract FocusConverter getFocusConverter();
+
     public abstract Property<Integer> getCursorPositionIndex();
 
     public abstract Property<Integer> getSelectFromIndex();
-
-    public FocusProperty getFocusProperty() {
-        return text.get(FocusProperty.class);
-    }
 
     public TextProperty getTextProperty() {
         return text.get(TextProperty.class);
@@ -100,39 +100,39 @@ public abstract class TextEditMouseInputListener extends MouseInputAdapter {
     }
 
     @Override
-    public void onLeftButtonPress(MouseEvent mouse) {
-        FocusProperty focusProperty = getFocusProperty();
-        if (!isTextSelected(mouse)) {
-            if (focusProperty.isFocus()) {
-                getTextEditEffect().finishImmediately();
-                focusProperty.setFocus(false);
+    public void onPointPress(InputEvent point) {
+        FocusConverter focusConverter = getFocusConverter();
+        if (isTextSelected(point)){
+            if (focusConverter.isFocus(text)){
+                setCursorPosition(point);
+            }else {
+                focusConverter.setFocus(text);
+                selectAll();
             }
-            return;
-        }
-
-        if (focusProperty.isFocus()) {
-            setCursorPosition(mouse.x, mouse.y);
-        } else {
-            selectAll();
-            focusProperty.setFocus(true);
+        }else {
+            if (focusConverter.isFocus(text)) {
+                focusConverter.setFocus(null);
+                getTextEditEffect().finishImmediately();
+            }
         }
     }
 
     @Override
-    public void onLeftButtonDragging(MouseEvent mouse) {
-        if (!getFocusProperty().isFocus()) return;
-        setSelectToIndex(mouse.x, mouse.y);
+    public void onPointDragging(InputEvent point) {
+        if (getFocusConverter().isFocus(text)){
+            setSelectToIndex(point);
+        }
     }
 
-    protected boolean isTextSelected(MouseEvent mouse) {
-        if (!getSelectConverter().isSelect(text, mouse)) return false;
+    protected boolean isTextSelected(InputEvent point) {
+        if (!getSelectConverter().isSelect(text, point)) return false;
         TextProperty textProperty = text.get(TextProperty.class);
         if (textProperty.getSrc() == null) return false;
         AABB box = text.get(AABB.class);
-        int x = Math.round(mouse.x - box.getXLeft());
+        int x = Math.round(getX(point) - box.getXLeft());
         if (x < textProperty.getStartX()) return false;
         if (x > textProperty.getEndX()) return false;
-        int y = Math.round(mouse.y - box.getYBottom());
+        int y = Math.round(getY(point) - box.getYBottom());
         if (y < textProperty.getStartY()) return false;
         if (y > textProperty.getEndY()) return false;
 
@@ -141,9 +141,14 @@ public abstract class TextEditMouseInputListener extends MouseInputAdapter {
 
     @Override
     public void onLeftButtonDoubleClick(MouseEvent mouse) {
-        if (getFocusProperty().isFocus()) {
+        if (getFocusConverter().isFocus(text)) {
             selectAll();
         }
+    }
+
+    protected void setCursorPosition(InputEvent point){
+        if (point instanceof MouseEvent) setCursorPosition(((MouseEvent) point).x,((MouseEvent) point).y);
+        else setCursorPosition((int)((PointTouchEvent) point).x,(int)((PointTouchEvent) point).y);
     }
 
     protected void setCursorPosition(int x, int y) {
@@ -155,6 +160,11 @@ public abstract class TextEditMouseInputListener extends MouseInputAdapter {
         getCursorPositionIndex().setValue(index);
         getTextEditEffect().setCursorPosition(0, index);
         getSelectFromIndex().setValue(index);
+    }
+
+    protected void setSelectToIndex(InputEvent point){
+        if (point instanceof MouseEvent) setSelectToIndex(((MouseEvent) point).x,((MouseEvent) point).y);
+        else setSelectToIndex((int)((PointTouchEvent) point).x,(int)((PointTouchEvent) point).y);
     }
 
     protected void setSelectToIndex(int x, int y) {

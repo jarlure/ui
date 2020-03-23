@@ -2,21 +2,23 @@ package com.jarlure.ui.effect;
 
 import com.jarlure.ui.property.FontProperty;
 import com.jarlure.ui.property.TextProperty;
+import com.jarlure.ui.util.ImageHandler;
 import com.jme3.math.ColorRGBA;
 import com.jme3.texture.Image;
-import com.jme3.texture.image.ImageRaster;
+
+import java.nio.ByteBuffer;
 
 public class TextLineEditEffect extends TextEditEffect {
 
     protected FontProperty fontProperty;
     protected TextProperty textProperty;
     protected int fromIndex, toIndex;
-    protected ColorRGBA cursorColor;
+    protected byte[] cursorColor=new byte[4];
     protected boolean isCursorShowing;
-    protected int[] textMarkForCursor;
-    protected ColorRGBA selectionBackgroundColor;
-    protected ColorRGBA selectionTextColor;
-    protected int[] textMarkForSelection;
+    protected byte[] textMarkForCursor;
+    protected byte[] selectionBackgroundColor=new byte[4];
+    protected byte[] selectionTextColor=new byte[4];
+    protected byte[] textMarkForSelection;
 
     /**
      * 单行文本编辑效果
@@ -27,9 +29,9 @@ public class TextLineEditEffect extends TextEditEffect {
     public TextLineEditEffect(FontProperty fontProperty, TextProperty textProperty) {
         this.fontProperty = fontProperty;
         this.textProperty = textProperty;
-        this.cursorColor = ColorRGBA.Black;
-        this.selectionBackgroundColor = new ColorRGBA(0f, 0.5f, 1f, 1f);
-        this.selectionTextColor = ColorRGBA.White;
+        setCursorColor(ColorRGBA.Black);
+        setSelectionBackgroundColor(new ColorRGBA(0f, 0.5f, 1f, 1f));
+        setSelectionTextColor(ColorRGBA.White);
         textProperty.addPropertyListener((property, oldValue, newValue) -> {
             if (property.equals(TextProperty.Property.DES)) {
                 isCursorShowing = false;
@@ -45,7 +47,10 @@ public class TextLineEditEffect extends TextEditEffect {
      * @param cursorColor 光标颜色
      */
     public void setCursorColor(ColorRGBA cursorColor) {
-        this.cursorColor = cursorColor;
+        this.cursorColor[0]=ImageHandler.toByte(cursorColor.r);
+        this.cursorColor[1]=ImageHandler.toByte(cursorColor.g);
+        this.cursorColor[2]=ImageHandler.toByte(cursorColor.b);
+        this.cursorColor[3]=ImageHandler.toByte(cursorColor.a);
     }
 
     /**
@@ -54,7 +59,10 @@ public class TextLineEditEffect extends TextEditEffect {
      * @param selectionBackgroundColor 选中文本背景色
      */
     public void setSelectionBackgroundColor(ColorRGBA selectionBackgroundColor) {
-        this.selectionBackgroundColor = selectionBackgroundColor;
+        this.selectionBackgroundColor[0]=ImageHandler.toByte(selectionBackgroundColor.r);
+        this.selectionBackgroundColor[1]=ImageHandler.toByte(selectionBackgroundColor.g);
+        this.selectionBackgroundColor[2]=ImageHandler.toByte(selectionBackgroundColor.b);
+        this.selectionBackgroundColor[3]=ImageHandler.toByte(selectionBackgroundColor.a);
     }
 
     /**
@@ -63,7 +71,10 @@ public class TextLineEditEffect extends TextEditEffect {
      * @param selectionTextColor 选中文本字体色
      */
     public void setSelectionTextColor(ColorRGBA selectionTextColor) {
-        this.selectionTextColor = selectionTextColor;
+        this.selectionTextColor[0]=ImageHandler.toByte(selectionTextColor.r);
+        this.selectionTextColor[1]=ImageHandler.toByte(selectionTextColor.g);
+        this.selectionTextColor[2]=ImageHandler.toByte(selectionTextColor.b);
+        this.selectionTextColor[3]=ImageHandler.toByte(selectionTextColor.a);
     }
 
     @Override
@@ -108,27 +119,39 @@ public class TextLineEditEffect extends TextEditEffect {
         int endX = Math.min(textPosInImg[2 * maxIndex], textProperty.getEndX());
         int endY = Math.min(startY + (int) Math.ceil(1.1f * fontProperty.getSize()), textProperty.getEndY());
         if (startX == endX) return;
-        ImageRaster srcRaster = ImageRaster.create(src);
-        ImageRaster desRaster = ImageRaster.create(des);
-        ColorRGBA color1 = new ColorRGBA();
-        ColorRGBA color2 = new ColorRGBA();
-        textMarkForSelection = new int[(endY - startY) * (endX - startX) / 2];
-        for (int y = startY, i = 0; y < endY; y++) {
-            for (int x = startX; x < endX; x++) {
-                srcRaster.getPixel(x, y, color1);
-                desRaster.getPixel(x, y, color2);
-                if (color1.equals(color2)) desRaster.setPixel(x, y, selectionBackgroundColor);
-                else {
-                    if (i == textMarkForSelection.length) {
-                        int[] newArray = new int[textMarkForSelection.length * 2];
-                        System.arraycopy(textMarkForSelection, 0, newArray, 0, textMarkForSelection.length);
-                        textMarkForSelection = newArray;
+        ByteBuffer srcData = src.getData(0);
+        ByteBuffer desData = des.getData(0);
+        int growthLen = 8*(endX - startX)+4;
+        textMarkForSelection = new byte[growthLen];
+        int line = 4*src.getWidth();
+        int pos = startY*line + 4*startX;
+        byte[] srcStore=new byte[4*(endX-startX)];
+        byte[] desStore=new byte[4*(endX-startX)];
+        for (int y=startY,i=0;y<endY;y++){
+            srcData.position(pos);
+            desData.position(pos);
+            srcData.get(srcStore);
+            desData.get(desStore);
+            for (int xi=0;xi<srcStore.length;xi+=4){
+                if (srcStore[xi]==desStore[xi] && srcStore[xi+1]==desStore[xi+1] && srcStore[xi+2]==desStore[xi+2] && srcStore[xi+3]==desStore[xi+3]){
+                    System.arraycopy(selectionBackgroundColor,0,desStore,xi,4);
+                }else {
+                    //存储被替换的颜色数据
+                    if (i==textMarkForSelection.length){
+                        byte[] array = new byte[textMarkForSelection.length+growthLen];
+                        System.arraycopy(textMarkForSelection,0,array,0,textMarkForSelection.length);
+                        textMarkForSelection=array;
                     }
-                    textMarkForSelection[i++] = color2.asIntRGBA();
-                    desRaster.setPixel(x, y, selectionTextColor);
+                    System.arraycopy(desStore,xi,textMarkForSelection,i,4);
+                    i+=4;
+                    System.arraycopy(selectionTextColor,0,desStore,xi,4);
                 }
             }
+            desData.position(pos);
+            desData.put(desStore);
+            pos+=line;
         }
+        des.setUpdateNeeded();
     }
 
     /**
@@ -148,21 +171,30 @@ public class TextLineEditEffect extends TextEditEffect {
         int endX = Math.min(textPosInImg[2 * maxIndex], textProperty.getEndX());
         int endY = Math.min(startY + (int) Math.ceil(1.1f * fontProperty.getSize()), textProperty.getEndY());
         if (startX == endX) return;
-        ImageRaster srcRaster = ImageRaster.create(src);
-        ImageRaster desRaster = ImageRaster.create(des);
-        ColorRGBA color = new ColorRGBA();
-        for (int y = startY, i = 0; y < endY; y++) {
-            for (int x = startX; x < endX; x++) {
-                desRaster.getPixel(x, y, color);
-                if (color.equals(selectionTextColor)) {
-                    color.fromIntRGBA(textMarkForSelection[i++]);
-                    desRaster.setPixel(x, y, color);
-                } else {
-                    srcRaster.getPixel(x, y, color);
-                    desRaster.setPixel(x, y, color);
+        ByteBuffer srcData = src.getData(0);
+        ByteBuffer desData = des.getData(0);
+        int line = 4*src.getWidth();
+        int pos = startY*line + 4*startX;
+        byte[] srcStore=new byte[4*(endX-startX)];
+        byte[] desStore=new byte[4*(endX-startX)];
+        for (int y=startY,i=0;y<endY;y++){
+            srcData.position(pos);
+            desData.position(pos);
+            srcData.get(srcStore);
+            desData.get(desStore);
+            for (int xi=0;xi<srcStore.length;xi+=4){
+                if (selectionTextColor[0]==desStore[xi] && selectionTextColor[1]==desStore[xi+1] && selectionTextColor[2]==desStore[xi+2] && selectionTextColor[3]==desStore[xi+3]){
+                    System.arraycopy(textMarkForSelection,i,desStore,xi,4);
+                    i+=4;
+                }else {
+                    System.arraycopy(srcStore,xi,desStore,xi,4);
                 }
             }
+            desData.position(pos);
+            desData.put(desStore);
+            pos+=line;
         }
+
         textMarkForSelection = null;
     }
 
@@ -180,15 +212,23 @@ public class TextLineEditEffect extends TextEditEffect {
         int x = Math.min(textPosInImg[2 * toIndex], textProperty.getEndX()-1);
         int startY = Math.max(textPosInImg[2 * toIndex + 1], textProperty.getStartY());
         int endY = Math.min(startY + (int) Math.ceil(1.1f * fontProperty.getSize()), textProperty.getEndY());
-        ImageRaster desRaster = ImageRaster.create(des);
-        ColorRGBA color = new ColorRGBA();
-        if (textMarkForCursor == null || textMarkForCursor.length < endY - startY)
-            textMarkForCursor = new int[endY - startY];
-        for (int y = startY, i = 0; y < endY; y++) {
-            desRaster.getPixel(x, y, color);
-            textMarkForCursor[i++] = color.asIntRGBA();
-            desRaster.setPixel(x, y, cursorColor);
+        if (textMarkForCursor == null || textMarkForCursor.length < 4*(endY - startY)){
+            textMarkForCursor = new byte[4*(endY-startY)];
         }
+        ByteBuffer data = des.getData(0);
+        int line = 4*des.getWidth();
+        int pos = line*startY+4*x;
+        byte[] store = new byte[4];
+        for (int y=startY,i=0;y<endY;y++){
+            data.position(pos);
+            data.get(store);
+            System.arraycopy(store,0,textMarkForCursor,i,4);
+            i+=4;
+            data.position(pos);
+            data.put(cursorColor);
+            pos+=line;
+        }
+        des.setUpdateNeeded();
         isCursorShowing = true;
     }
 
@@ -203,12 +243,16 @@ public class TextLineEditEffect extends TextEditEffect {
         int x = Math.min(textPosInImg[2 * toIndex], textProperty.getEndX()-1);
         int startY = Math.max(textPosInImg[2 * toIndex + 1], textProperty.getStartY());
         int endY = Math.min(startY + (int) Math.ceil(1.1f * fontProperty.getSize()), textProperty.getEndY());
-        ImageRaster desRaster = ImageRaster.create(des);
-        ColorRGBA color = new ColorRGBA();
-        for (int y = startY, i = 0; y < endY; y++) {
-            color.fromIntRGBA(textMarkForCursor[i++]);
-            desRaster.setPixel(x, y, color);
+        ByteBuffer data = des.getData(0);
+        int line = 4*des.getWidth();
+        int pos = line*startY+4*x;
+        for (int y=startY,i=0;y<endY;y++){
+            data.position(pos);
+            data.put(textMarkForCursor,i,4);
+            i+=4;
+            pos+=line;
         }
+        des.setUpdateNeeded();
         isCursorShowing = false;
     }
 

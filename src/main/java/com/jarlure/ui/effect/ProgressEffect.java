@@ -2,9 +2,9 @@ package com.jarlure.ui.effect;
 
 import com.jarlure.ui.property.ImageProperty;
 import com.jarlure.ui.util.ImageHandler;
-import com.jme3.math.ColorRGBA;
 import com.jme3.texture.Image;
-import com.jme3.texture.image.ImageRaster;
+
+import java.nio.ByteBuffer;
 
 public class ProgressEffect {
 
@@ -49,24 +49,29 @@ public class ProgressEffect {
     protected void drawPercent(float currentPercent, float aimPercent) {
         int width = currentImg.getWidth();
         int height = currentImg.getHeight();
-        ImageRaster reader;
+        ByteBuffer srcData;
         int left, right;
         if (currentPercent < aimPercent) {
-            reader = ImageRaster.create(fullImg);
+            srcData = fullImg.getData(0);
             left = Math.round(width * currentPercent);
             right = Math.round(width * aimPercent);
         } else {
-            reader = ImageRaster.create(emptyImg);
+            srcData = emptyImg.getData(0);
             left = Math.round(width * aimPercent);
             right = Math.round(width * currentPercent);
         }
-        ImageRaster writer = ImageRaster.create(currentImg);
-        for (int y = 0; y < height; y++) {
-            for (int x = left; x < right; x++) {
-                ColorRGBA color = reader.getPixel(x, y);
-                writer.setPixel(x, y, color);
-            }
+        ByteBuffer desData = currentImg.getData(0);
+        byte[] store = new byte[4*(right-left)];
+        int pos=4*left;
+        int line=4*width;
+        for (int y=0;y<height;y++){
+            srcData.position(pos);
+            desData.position(pos);
+            srcData.get(store);
+            desData.put(store);
+            pos+=line;
         }
+        currentImg.setUpdateNeeded();
     }
 
 }

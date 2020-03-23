@@ -26,7 +26,42 @@ public class OrderEffect {
                 float scale=Math.min(getOrderWidth()/box.getWidth(),getOrderHeight()/box.getHeight());
                 component.scale(scale);
             }
-            orderPosition(index,component);
+            for (int i=index;i<componentListProperty.size();i++){
+                orderPosition(i,componentListProperty.get(i));
+            }
+        }
+
+        @Override
+        public void propertyAdded(int index, UIComponent[] value) {
+            if (fixSize!=null){
+                for (UIComponent component:value){
+                    AABB box = component.get(AABB.class);
+                    float scale=Math.min(getOrderWidth()/box.getWidth(),getOrderHeight()/box.getHeight());
+                    component.scale(scale);
+                }
+            }
+            for (int i=index;i<componentListProperty.size();i++){
+                orderPosition(i,componentListProperty.get(i));
+            }
+        }
+
+        @Override
+        public void propertyRemoved(int index, UIComponent value) {
+            for (int i=index;i<componentListProperty.size();i++){
+                orderPosition(i,componentListProperty.get(i));
+            }
+        }
+
+        @Override
+        public void propertyRemoved(int[] index, Object[] value) {
+            int minIndex=index[0];{
+                for (int i:index){
+                    if (i<minIndex) minIndex=i;
+                }
+            }
+            for (int i=minIndex;i<componentListProperty.size();i++){
+                orderPosition(i,componentListProperty.get(i));
+            }
         }
 
         @Override
@@ -108,6 +143,7 @@ public class OrderEffect {
      * @param component 组件
      */
     public void orderPosition(int index, UIComponent component){
+        if (component==null)return;
         AABB box = component.get(AABB.class);
         if (fixPoint0 != null && fixPoint1 != null) {
             float firstLocationX, firstLocationY;
